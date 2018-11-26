@@ -1,0 +1,6 @@
+[package]
+name = "mochi-graph-algorithms"
+version = "0.1.0"
+authors = ["Kutimotitokura <kutimoti.tokura@gmail.com>"]
+
+[dependencies]

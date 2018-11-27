@@ -43,4 +43,18 @@ mod tests {
             println!("{}", r);
         }
     }
+
+    use graph::matching::gabow_e_algorithm::*;
+
+    #[test]
+    fn bipartite_matching() {
+        let mut g = UndirectedGraph::<usize, usize>::new(7,0);
+        g.add_edge(&Vertex(0),&Vertex(0 + 3),0);
+        g.add_edge(&Vertex(0),&Vertex(2 + 3),0);
+        g.add_edge(&Vertex(0),&Vertex(3 + 3),0);
+        g.add_edge(&Vertex(1),&Vertex(1 + 3),0);
+        g.add_edge(&Vertex(2),&Vertex(1 + 3),0);
+        g.add_edge(&Vertex(2),&Vertex(3 + 3),0);
+        println!("{:?}",gabow_e_algorithm(&g));
+    }
 }

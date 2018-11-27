@@ -1,4 +1,5 @@
 pub mod property;
+pub mod matching;
 mod undirected_graph;
 mod directed_graph;
 
@@ -9,11 +10,11 @@ use graph::property::*;
 use std::slice::Iter;
 
 /// Vertex object for graphs. it has the index of the vertex.
-#[derive(Clone,Eq,PartialEq,Debug)]
+#[derive(Clone,Copy,Eq,PartialEq,Debug)]
 pub struct Vertex(pub usize);
 
 /// Edge object for graphs.
-#[derive(Clone,Debug)]
+#[derive(Clone,Copy,Debug)]
 pub struct Edge {
     /// index of the edge for edge property.
     pub index : usize,

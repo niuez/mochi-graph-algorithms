@@ -10,6 +10,11 @@ pub enum BFResult<W> {
     None
 }
 
+/// return distances from s to all vertices in graph by Bellman-Ford Algorithm.
+/// running time O(EV)
+/// if a vertex cannot reach from s, result of the vertex is `None`,
+/// else if the distance of the vertex can be -INF , result is `NegInf` and
+/// else result is `Some(distance)`
 pub fn bellman_ford<VP,EP,W,F>(g: &DirectedGraph<VP,EP>, s: Vertex, start_prop: W, fp: F) -> Vec<BFResult<W>>
 where VP: Property, EP: Property, W: Weighted, F: Fn(&EP) -> &W {
     let n = g.vertices_cnt();

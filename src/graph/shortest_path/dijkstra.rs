@@ -28,6 +28,10 @@ impl<W: NonNegativeWeighted> PartialEq for DijkstraNode<W> {
     }
 }
 
+/// return distances from s to all vertices in graph bt Dijkstra's Algorithm with using binary heap.
+/// running time O((E + V) log V)
+/// if a vertex cannot reach from s, result of the vertex is None.
+/// else, the result is Some(distance)
 pub fn dijkstra<VP,EP,W,F>(g: &DirectedGraph<VP,EP>, s: Vertex, start_prop: W, fp: F) -> Vec<Option<W>>
 where VP: Property , EP: Property, W: NonNegativeWeighted , F: Fn(&EP) -> &W {
     let n = g.vertices_cnt();

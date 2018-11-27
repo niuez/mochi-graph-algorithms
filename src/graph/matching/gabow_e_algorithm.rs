@@ -40,8 +40,10 @@ fn assign_label(mate: & Vec<Vertex>, label: &mut Vec<GLabel>, first: &mut Vec<Ve
     let mut r = eval_first(label,first,x);
     let mut s = eval_first(label,first,y);
     let num = e.index as i32;
+    label[r.0] = GLabel::NonOuter(num);
+    label[s.0] = GLabel::NonOuter(num);
     if r != s {
-        let mut join = Vertex(0);
+        let join;
         loop { 
             if s != Vertex(0) { std::mem::swap(&mut r, &mut s); }
             if let GLabel::Vertex(temp) = label[mate[r.0].0] {

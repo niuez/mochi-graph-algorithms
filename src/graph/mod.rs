@@ -11,11 +11,20 @@ use std::slice::Iter;
 #[derive(Clone,Eq,PartialEq,Debug)]
 pub struct Vertex(pub usize);
 
-#[derive(Clone,Eq,PartialEq,Debug)]
+#[derive(Clone,Debug)]
 pub struct Edge {
     pub index : usize,
+    pub from : Vertex,
     pub to : Vertex
 }
+
+impl PartialEq for Edge {
+    fn eq(&self, other: &Self) -> bool {
+        self.index == other.index
+    }
+}
+
+impl Eq for Edge {}
 
 pub trait Graph {
     type VP;

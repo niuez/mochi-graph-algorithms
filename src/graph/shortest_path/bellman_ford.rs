@@ -16,7 +16,7 @@ where VP: Property, EP: Property, W: Weighted, F: Fn(&EP) -> &W {
     let mut dist = vec![BFResult::None ; n];
     dist[s.0] = BFResult::Some(start_prop);
     
-    for i in 0..n+1 {
+    for _ in 0..n+1 {
         for v in 0..n {
             if let BFResult::Some(dv) = dist[v] {
                 for e in g.delta(&Vertex(v)) {
@@ -40,7 +40,7 @@ where VP: Property, EP: Property, W: Weighted, F: Fn(&EP) -> &W {
             }
         }
     }
-    for i in 0..n+1 {
+    for _ in 0..n+1 {
         for v in 0..n {
             if let BFResult::Some(dv) = dist[v] {
                 for e in g.delta(&Vertex(v)) {

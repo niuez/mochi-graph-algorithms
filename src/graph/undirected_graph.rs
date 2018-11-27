@@ -15,8 +15,8 @@ impl<VP : Property ,EP : Property> Graph for UndirectedGraph<VP,EP> {
         }
     }
     fn add_edge(&mut self , from : &Vertex , to : &Vertex , edge_prop : Self::EP) {
-        self.g[from.0].push(Edge{index : self.m , to : to.clone()});
-        self.g[to.0].push(Edge{index : self.m, to : from.clone()});
+        self.g[from.0].push(Edge{index : self.m , from : from.clone() , to : to.clone()});
+        self.g[to.0].push(Edge{index : self.m, from : to.clone(), to : from.clone()});
         self.es.push(edge_prop);
         self.m += 1;
     }

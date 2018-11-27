@@ -15,7 +15,7 @@ impl<VP : Property ,EP : Property> Graph for DirectedGraph<VP,EP> {
         }
     }
     fn add_edge(&mut self , from : &Vertex , to : &Vertex , edge_prop : Self::EP) {
-        self.g[from.0].push(Edge{index : self.m , to : to.clone()});
+        self.g[from.0].push(Edge{index : self.m, from : from.clone() , to : to.clone()});
         self.es.push(edge_prop);
         self.m += 1;
     }

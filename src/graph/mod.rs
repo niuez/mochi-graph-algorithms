@@ -9,7 +9,7 @@ use std::slice::Iter;
 use std::collections::btree_map::*;
 
 /// Vertex object for graphs. it has the index of the vertex.
-#[derive(Clone,Copy,Eq,PartialEq,Debug,PartialOrd,Ord)]
+#[derive(Clone,Copy,Eq,PartialEq,Debug)]
 pub struct Vertex(pub usize);
 
 /// Edge object for graphs.

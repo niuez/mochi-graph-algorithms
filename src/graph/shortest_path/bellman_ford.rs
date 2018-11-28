@@ -1,6 +1,4 @@
-use graph::Vertex;
-use graph::Graph;
-use graph::DirectedGraph;
+use graph::*;
 use graph::property::*;
 
 #[derive(Clone,Copy,PartialEq,Eq)]

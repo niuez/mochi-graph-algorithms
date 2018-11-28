@@ -1,7 +1,4 @@
-use graph::Graph;
-use graph::UndirectedGraph;
-use graph::Vertex;
-use graph::Edge;
+use graph::*;
 use graph::property::*;
 
 use std::collections::VecDeque;

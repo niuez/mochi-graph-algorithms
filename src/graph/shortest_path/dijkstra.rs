@@ -1,5 +1,6 @@
 use graph::*;
 use graph::property::*;
+use graph::directed_graph::*;
 
 use std::collections::BinaryHeap;
 use std::cmp::Ordering;

@@ -1,5 +1,6 @@
 use graph::*;
 use graph::property::*;
+use graph::undirected_graph::*;
 
 use std::collections::VecDeque;
 

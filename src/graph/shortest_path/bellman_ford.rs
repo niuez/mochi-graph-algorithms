@@ -1,5 +1,6 @@
 use graph::*;
 use graph::property::*;
+use graph::directed_graph::*;
 
 #[derive(Clone,Copy,PartialEq,Eq)]
 pub enum BFResult<W> {

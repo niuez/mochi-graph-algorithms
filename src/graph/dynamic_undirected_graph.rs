@@ -62,6 +62,34 @@ impl<'a,VP: Property, EP: Property> DynamicGraph<'a,VP,EP> for DynamicUndirected
             vs: BTreeMap::<usize,VP>::new()
         }
     }
+    fn add_vertex(&'a mut self,v: &Vertex,vp: VP) -> bool {
+        if self.vs.contains_key(&v.0) {
+            false
+        }
+        else {
+            self.vs.insert(v.0,vp);
+            true
+        }
+    }
+    fn erase_vertex(&'a mut self, v: &Vertex) -> bool {
+        if self.vs.contains_key(&v.0) {
+            self.vs.remove(&v.0);
+            // TODO: erase connected edges
+            true
+        }
+        else {
+            false
+        }
+    }
+    fn erase_edge(&'a mut self, e: &Edge) -> bool { 
+        if self.vs.contains_key(&e.index) {
+            self.es.remove(&e.index);
+            true
+        }
+        else {
+            false
+        }
+    }
 }
 impl<'a,VP : Property, EP: Property> Undirected<'a,VP,EP> for DynamicUndirectedGraph<VP,EP> {
 }

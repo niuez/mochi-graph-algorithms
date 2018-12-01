@@ -6,7 +6,6 @@ use std::collections::btree_map::*;
 
 ///struct for UndirectedGraph.
 pub struct DynamicUndirectedGraph<VP: Property,EP: Property> {
-    n : usize,
     m : usize,
     g : BTreeMap<usize,BTreeMap<usize,Edge>>,
     es : BTreeMap<usize,EP>,
@@ -57,7 +56,6 @@ impl<'a,VP : Property ,EP : Property> Graph<'a,VP,EP> for DynamicUndirectedGraph
 impl<'a,VP: Property, EP: Property> DynamicGraph<'a,VP,EP> for DynamicUndirectedGraph<VP,EP> {
     fn new() -> Self {
         DynamicUndirectedGraph {
-            n: 0,
             m: 0,
             g: BTreeMap::<usize,BTreeMap<usize,Edge>>::new(),
             es: BTreeMap::<usize,EP>::new(),

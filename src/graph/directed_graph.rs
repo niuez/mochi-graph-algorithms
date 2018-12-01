@@ -10,9 +10,10 @@ pub struct DirectedGraph<VP: Property,EP: Property> {
     vs : Vec<VP>
 }
 
-impl<VP : Property ,EP : Property> Graph for DirectedGraph<VP,EP> {
+impl<'a,VP : Property ,EP : Property> Graph<'a> for DirectedGraph<VP,EP> {
     type VP = VP;
     type EP = EP;
+    type EIter = std::slice::Iter<'a,Edge>;
     
     fn add_edge(&mut self , from : &Vertex , to : &Vertex , edge_prop : Self::EP) {
         self.g[from.0].push(Edge{index : self.m, from : from.clone() , to : to.clone()});
@@ -33,9 +34,13 @@ impl<VP : Property ,EP : Property> Graph for DirectedGraph<VP,EP> {
     fn eprop(&self, e : &Edge) -> &Self::EP {
         & self.es[e.index]
     }
+
+    fn delta(&'a self , v : &Vertex) -> Self::EIter {
+        self.g[v.0].iter()
+    }
 }
 
-impl<VP : Property ,EP : Property> StaticGraph for DirectedGraph<VP,EP> {
+impl<'a,VP : Property ,EP : Property> StaticGraph<'a> for DirectedGraph<VP,EP> {
     fn new(n : usize , vp_init: VP) -> Self {
         DirectedGraph {
             n: n,
@@ -45,7 +50,5 @@ impl<VP : Property ,EP : Property> StaticGraph for DirectedGraph<VP,EP> {
             vs: vec![vp_init; n]
         }
     }
-    fn delta(&self , v : &Vertex) -> Iter<Edge> {
-        self.g[v.0].iter()
-    }
+    
 }

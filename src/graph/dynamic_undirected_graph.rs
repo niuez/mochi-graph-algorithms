@@ -13,9 +13,10 @@ pub struct DynamicUndirectedGraph<VP: Property,EP: Property> {
     vs : Vec<VP>
 }
 
-impl<VP : Property ,EP : Property> Graph for DynamicUndirectedGraph<VP,EP> {
+impl<'a,VP : Property ,EP : Property> Graph<'a> for DynamicUndirectedGraph<VP,EP> {
     type VP = VP;
     type EP = EP;
+    type EIter = std::collections::btree_map::Values<'a,usize,Edge>;
     fn add_edge(&mut self , from : &Vertex , to : &Vertex , edge_prop : Self::EP) {
         match self.g.get_mut(&from.0) {
             Some(arr) => {
@@ -50,10 +51,11 @@ impl<VP : Property ,EP : Property> Graph for DynamicUndirectedGraph<VP,EP> {
     fn eprop(&self, e : &Edge) -> &Self::EP {
         & self.es[e.index]
     }
-}
-
-impl<VP: Property, EP: Property> DynamicGraph for DynamicUndirectedGraph<VP,EP> {
-    fn delta(&self , v : &Vertex) -> Values<usize,Edge> {
+    fn delta(&'a self , v : &Vertex) -> Self::EIter {
         self.g[&v.0].values()
     }
+}
+
+impl<'a,VP: Property, EP: Property> DynamicGraph<'a> for DynamicUndirectedGraph<VP,EP> {
+    
 }

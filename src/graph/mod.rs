@@ -6,8 +6,6 @@ pub mod dynamic_undirected_graph;
 pub mod matching;
 pub mod shortest_path;
 
-use std::slice::Iter;
-use std::collections::btree_map::*;
 
 /// Vertex object for graphs. it has the index of the vertex.
 #[derive(Clone,Copy,Eq,PartialEq,Debug)]
@@ -33,9 +31,10 @@ impl PartialEq for Edge {
 
 impl Eq for Edge {}
 
-pub trait Graph {
+pub trait Graph<'a> {
     type VP;
     type EP;
+    type EIter;
     
     /// this method return the count of vertices of graph.
     fn vertices_cnt(&self) -> usize;
@@ -51,15 +50,15 @@ pub trait Graph {
     fn eprop_mut(&mut self, e : &Edge) -> &mut Self::EP;
     /// this method return reference of e's property.
     fn eprop(&self, e : &Edge) -> &Self::EP;
+
+    fn delta(&'a self , v : &Vertex) -> Self::EIter;
 }
 
-pub trait StaticGraph: Graph {
+pub trait StaticGraph<'a>: Graph<'a> {
     /// this method create new graph object.
     /// n ... count of vertices.
     /// vp_init ... initial property of vertices.
     fn new(n : usize , vp_init : Self::VP) -> Self;
-    fn delta(&self , v : &Vertex) -> Iter<Edge>;
 }
-pub trait DynamicGraph: Graph {
-    fn delta(&self , v : &Vertex) -> Values<usize,Edge>;
+pub trait DynamicGraph<'a>: Graph<'a> {
 }

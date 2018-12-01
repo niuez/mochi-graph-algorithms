@@ -10,9 +10,10 @@ pub struct UndirectedGraph<VP: Property,EP: Property> {
 use graph::*;
 use graph::property::Property;
 
-impl<VP : Property ,EP : Property> Graph for UndirectedGraph<VP,EP> {
+impl<'a,VP : Property ,EP : Property> Graph<'a> for UndirectedGraph<VP,EP> {
     type VP = VP;
     type EP = EP;
+    type EIter = std::slice::Iter<'a,Edge>;
     
     fn add_edge(&mut self , from : &Vertex , to : &Vertex , edge_prop : Self::EP) {
         self.g[from.0].push(Edge{index : self.m , from : from.clone() , to : to.clone()});
@@ -34,9 +35,13 @@ impl<VP : Property ,EP : Property> Graph for UndirectedGraph<VP,EP> {
     fn eprop(&self, e : &Edge) -> &Self::EP {
         & self.es[e.index]
     }
+
+    fn delta(&'a self , v : &Vertex) -> Self::EIter {
+        self.g[v.0].iter()
+    }
 }
 
-impl<VP : Property ,EP : Property> StaticGraph for UndirectedGraph<VP,EP> {
+impl<'a,VP : Property ,EP : Property> StaticGraph<'a> for UndirectedGraph<VP,EP> {
     fn new(n : usize , vp_init: VP) -> Self {
         UndirectedGraph {
             n: n,
@@ -46,7 +51,5 @@ impl<VP : Property ,EP : Property> StaticGraph for UndirectedGraph<VP,EP> {
             vs: vec![vp_init; n]
         }
     }
-    fn delta(&self , v : &Vertex) -> Iter<Edge> {
-        self.g[v.0].iter()
-    }
+    
 }

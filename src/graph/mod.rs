@@ -6,6 +6,7 @@ pub mod dynamic_undirected_graph;
 pub mod matching;
 pub mod shortest_path;
 
+use graph::property::*;
 
 /// Vertex object for graphs. it has the index of the vertex.
 #[derive(Clone,Copy,Eq,PartialEq,Debug)]
@@ -31,34 +32,37 @@ impl PartialEq for Edge {
 
 impl Eq for Edge {}
 
-pub trait Graph<'a> {
-    type VP;
-    type EP;
-    type EIter;
+pub trait Graph<'a,VP: Property,EP: Property> {
+    type EIter: std::iter::Iterator<Item=&'a Edge>;
     
     /// this method return the count of vertices of graph.
     fn vertices_cnt(&self) -> usize;
     /// this method return the count of edges of graph.
     fn edges_cnt(&self) -> usize;
     /// this method add new edge to graph.
-    fn add_edge(&mut self , from : &Vertex , to : &Vertex , edge_prop : Self::EP);
+    fn add_edge(&mut self , from : &Vertex , to : &Vertex , edge_prop : EP);
     /// this method return mutable reference of v's property.
-    fn vprop_mut(&mut self, v : &Vertex) -> &mut Self::VP;
+    fn vprop_mut(&mut self, v : &Vertex) -> &mut VP;
     /// this method return reference of v's property.
-    fn vprop(&self, v : &Vertex) -> &Self::VP;
+    fn vprop(&self, v : &Vertex) -> &VP;
     /// this method return mutable reference of e's property.
-    fn eprop_mut(&mut self, e : &Edge) -> &mut Self::EP;
+    fn eprop_mut(&mut self, e : &Edge) -> &mut EP;
     /// this method return reference of e's property.
-    fn eprop(&self, e : &Edge) -> &Self::EP;
+    fn eprop(&self, e : &Edge) -> &EP;
 
     fn delta(&'a self , v : &Vertex) -> Self::EIter;
 }
 
-pub trait StaticGraph<'a>: Graph<'a> {
+pub trait StaticGraph<'a,VP: Property, EP: Property>: Graph<'a,VP,EP> {
     /// this method create new graph object.
     /// n ... count of vertices.
     /// vp_init ... initial property of vertices.
-    fn new(n : usize , vp_init : Self::VP) -> Self;
+    fn new(n : usize , vp_init : VP) -> Self;
 }
-pub trait DynamicGraph<'a>: Graph<'a> {
+pub trait DynamicGraph<'a,VP: Property, EP: Property>: Graph<'a,VP,EP> {
+}
+
+pub trait Directed<'a,VP: Property,EP: Property>: Graph<'a,VP,EP>{
+}
+pub trait Undirected<'a,VP: Property,EP: Property>: Graph<'a,VP,EP>{
 }

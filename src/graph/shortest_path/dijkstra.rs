@@ -1,6 +1,5 @@
 use graph::*;
 use graph::property::*;
-use graph::directed_graph::*;
 
 use std::collections::BinaryHeap;
 use std::cmp::Ordering;
@@ -31,8 +30,8 @@ impl<W: NonNegativeWeighted> PartialEq for DijkstraNode<W> {
 /// running time O((E + V) log V)
 /// if a vertex cannot reach from s, result of the vertex is None.
 /// else, the result is Some(distance)
-pub fn dijkstra<VP,EP,W,F>(g: &DirectedGraph<VP,EP>, s: Vertex, start_prop: W, fp: F) -> Vec<Option<W>>
-where VP: Property , EP: Property, W: NonNegativeWeighted , F: Fn(&EP) -> &W {
+pub fn dijkstra<'a,VP,EP,G,W,F>(g: &'a G, s: Vertex, start_prop: W, fp: F) -> Vec<Option<W>>
+where VP: Property , EP: Property,G: Directed<'a,VP,EP>, W: NonNegativeWeighted , F: Fn(&EP) -> &W {
     let n = g.vertices_cnt();
     let mut dist = vec![None ; n];
     dist[s.0] = Some(start_prop);

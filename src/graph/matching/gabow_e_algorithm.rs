@@ -72,7 +72,7 @@ fn assign_label(mate: & Vec<Vertex>, label: &mut Vec<GLabel>, first: &mut Vec<Ve
     }
 }
 
-fn augment_check<VP: Property,EP: Property>(g: &UndirectedGraph<VP,EP>, mate: &mut Vec<Vertex>, label: &mut Vec<GLabel>, first: &mut Vec<Vertex>,u : Vertex) -> bool {
+fn augment_check<'a,VP: Property,EP: Property,G: Undirected<'a,VP,EP>>(g: &'a G, mate: &mut Vec<Vertex>, label: &mut Vec<GLabel>, first: &mut Vec<Vertex>,u : Vertex) -> bool {
 
     let n = g.vertices_cnt();
     if mate[u.0] != Vertex(0) {
@@ -117,7 +117,7 @@ fn augment_check<VP: Property,EP: Property>(g: &UndirectedGraph<VP,EP>, mate: &m
 }
 
 
-pub fn gabow_e_algorithm<VP,EP>(ug : &UndirectedGraph<VP,EP>) -> Vec<(Vertex,Vertex)> where VP: Property , EP: Property{
+pub fn gabow_e_algorithm<'a,VP,EP,G>(ug : &'a G) -> Vec<(Vertex,Vertex)> where VP: Property , EP: Property, G: Undirected<'a,VP,EP>{
     let mut ans = Vec::<(Vertex,Vertex)>::new();
     let n = ug.vertices_cnt();
 

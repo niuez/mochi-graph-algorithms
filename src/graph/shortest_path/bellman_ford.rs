@@ -14,7 +14,7 @@ pub enum BFResult<W> {
 /// else if the distance of the vertex can be -INF , result is `NegInf` and
 /// else result is `Some(distance)`
 pub fn bellman_ford<'a,VP,EP,G,W,F>(g: &'a G, s: Vertex, start_prop: W, fp: F) -> Vec<BFResult<W>>
-where VP: Property, EP: Property,G: Directed<'a,VP,EP>, W: Weighted, F: Fn(&EP) -> &W {
+where VP: Property, EP: Property,G: Directed<'a,VP,EP> + StaticGraph<'a,VP,EP>, W: Weighted, F: Fn(&EP) -> &W {
     let n = g.vertices_cnt();
     let mut dist = vec![BFResult::None ; n];
     dist[s.0] = BFResult::Some(start_prop);

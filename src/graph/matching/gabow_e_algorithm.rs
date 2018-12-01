@@ -117,7 +117,7 @@ fn augment_check<'a,VP: Property,EP: Property,G: Undirected<'a,VP,EP>>(g: &'a G,
 }
 
 
-pub fn gabow_e_algorithm<'a,VP,EP,G>(ug : &'a G) -> Vec<(Vertex,Vertex)> where VP: Property , EP: Property, G: Undirected<'a,VP,EP>{
+pub fn gabow_e_algorithm<'a,VP,EP,G>(ug : &'a G) -> Vec<(Vertex,Vertex)> where VP: Property , EP: Property, G: Undirected<'a,VP,EP> + StaticGraph<'a,VP,EP>{
     let mut ans = Vec::<(Vertex,Vertex)>::new();
     let n = ug.vertices_cnt();
 

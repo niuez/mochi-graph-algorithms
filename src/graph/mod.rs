@@ -60,6 +60,10 @@ pub trait StaticGraph<'a,VP: Property, EP: Property>: Graph<'a,VP,EP> {
     fn new(n : usize , vp_init : VP) -> Self;
 }
 pub trait DynamicGraph<'a,VP: Property, EP: Property>: Graph<'a,VP,EP> {
+    fn new() -> Self;
+    //fn add_vertex(v: &Vertex) -> bool;
+    //fn erase_vertex(v: &Vertex) -> bool;
+    //fn erase_edge(v: &Vertex) -> bool;
 }
 
 pub trait Directed<'a,VP: Property,EP: Property>: Graph<'a,VP,EP>{

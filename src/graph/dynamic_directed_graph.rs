@@ -59,6 +59,7 @@ impl<'a,VP : Property, EP: Property> DynamicGraph<'a,VP,EP> for DynamicDirectedG
         }
         else {
             self.vs.insert(v.0,vp);
+            self.g.insert(v.0,BTreeMap::<usize,Edge>::new());
             true
         }
     }
@@ -66,6 +67,7 @@ impl<'a,VP : Property, EP: Property> DynamicGraph<'a,VP,EP> for DynamicDirectedG
         if self.vs.contains_key(&v.0) {
             self.vs.remove(&v.0);
             // TODO: erase connected edges
+            self.g.remove(&v.0);
             true
         }
         else {
@@ -74,6 +76,7 @@ impl<'a,VP : Property, EP: Property> DynamicGraph<'a,VP,EP> for DynamicDirectedG
     }
     fn erase_edge(&'a mut self, e: &Edge) -> bool { 
         if self.vs.contains_key(&e.index) {
+            self.g.get_mut(&e.from.0).unwrap().remove(&e.index);
             self.es.remove(&e.index);
             true
         }

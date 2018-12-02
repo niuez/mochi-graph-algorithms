@@ -3,6 +3,7 @@ pub mod directed_graph;
 pub mod undirected_graph;
 pub mod dynamic_directed_graph;
 pub mod dynamic_undirected_graph;
+pub mod bipartite_graph;
 pub mod matching;
 pub mod shortest_path;
 
@@ -69,4 +70,8 @@ pub trait DynamicGraph<'a,VP: Property, EP: Property>: Graph<'a,VP,EP> {
 pub trait Directed<'a,VP: Property,EP: Property>: Graph<'a,VP,EP>{
 }
 pub trait Undirected<'a,VP: Property,EP: Property>: Graph<'a,VP,EP>{
+}
+
+pub trait Bipartite<'a,VP: Property,EP: Property>: Undirected<'a,VP,EP> {
+    fn new(left: usize, right: usize, vp_init: VP) -> Self;
 }

@@ -19,10 +19,10 @@ jobs:
             CARGO=~/.cargo/bin/cargo
             chmod -R a+w $RUSTUP $CARGO
             rm rustup-init
-            source ~/.cargo/env
-            export PATH=~/.cargo/bin:$PATH
       - run:
           name: test3
           command: |
+            source ~/.cargo/env
+            export PATH=~/.cargo/bin:$PATH
             cargo test test3 -- --nocapture
 

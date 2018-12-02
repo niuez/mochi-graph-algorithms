@@ -8,7 +8,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: test3
+          name: dijkstra_test
           command: |
-            cargo test test3 -- --nocapture
+            cargo test dijkstra_test -- --nocapture
 

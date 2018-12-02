@@ -10,7 +10,5 @@ jobs:
       - run:
           name: test3
           command: |
-            source ~/.cargo/env
-            export PATH=~/.cargo/bin:$PATH
             cargo test test3 -- --nocapture
 

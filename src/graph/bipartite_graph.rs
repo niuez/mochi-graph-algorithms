@@ -7,7 +7,9 @@ pub struct BipartiteGraph<VP: Property,EP: Property> {
     m: usize,
     g: Vec<Vec<Edge>>,
     es: Vec<EP>,
-    vs: Vec<VP>
+    vs: Vec<VP>,
+    ls: Vec<Vertex>,
+    rs: Vec<Vertex>,
 }
 
 impl<'a,VP: Property,EP: Property> Graph<'a,VP,EP> for BipartiteGraph<VP,EP> {
@@ -22,7 +24,7 @@ impl<'a,VP: Property,EP: Property> Graph<'a,VP,EP> for BipartiteGraph<VP,EP> {
         self.m += 1;
     }
 
-    fn vertices_cnt(&self) -> usize { self.left + self.right }
+    fn vertices_cnt(&self) -> usize { self.right }
     fn edges_cnt(&self) -> usize { self.m }
     fn vprop_mut(&mut self, v : &Vertex) -> &mut VP {
         &mut self.vs[v.0]
@@ -50,7 +52,9 @@ impl<'a,VP : Property ,EP : Property> StaticGraph<'a,VP,EP> for BipartiteGraph<V
             m: 0,
             g: vec![Vec::<Edge>::new(); n + n],
             es: Vec::<EP>::new(),
-            vs: vec![vp_init; n + n]
+            vs: vec![vp_init; n + n],
+            ls: (0..n).map(|i| Vertex(i)).collect(),
+            rs: (n..n+n).map(|i| Vertex(i)).collect()
         }
     }
 }
@@ -58,7 +62,7 @@ impl<'a,VP : Property ,EP : Property> StaticGraph<'a,VP,EP> for BipartiteGraph<V
 impl<'a,VP: Property, EP: Property> Undirected<'a,VP,EP> for BipartiteGraph<VP,EP> {
 }
 impl<'a,VP: Property, EP: Property> Bipartite<'a,VP,EP> for BipartiteGraph<VP,EP> {
-    fn new(left: usize, right: usize, vp_init: VP) -> Self {
+    fn binew(left: usize, right: usize, vp_init: VP) -> Self {
         assert!(left <= right, "it is not graph");
         BipartiteGraph {
             left: left,
@@ -66,8 +70,14 @@ impl<'a,VP: Property, EP: Property> Bipartite<'a,VP,EP> for BipartiteGraph<VP,EP
             m: 0,
             g: vec![Vec::<Edge>::new(); right],
             es: Vec::<EP>::new(),
-            vs: vec![vp_init; right]
+            vs: vec![vp_init; right],
+            ls: (0..left).map(|i| Vertex(i)).collect(),
+            rs: (left..right).map(|i| Vertex(i)).collect()
         }
     }
+    fn left_cnt(&self) -> usize { self.left }
+    fn right_cnt(&self) -> usize { self.right }
+    fn left_vertices(&self) -> std::slice::Iter<Vertex> { self.ls.iter() }
+    fn right_vertices(&self) -> std::slice::Iter<Vertex> { self.rs.iter() }
 }
 

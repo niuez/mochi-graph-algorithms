@@ -73,5 +73,9 @@ pub trait Undirected<'a,VP: Property,EP: Property>: Graph<'a,VP,EP>{
 }
 
 pub trait Bipartite<'a,VP: Property,EP: Property>: Undirected<'a,VP,EP> {
-    fn new(left: usize, right: usize, vp_init: VP) -> Self;
+    fn binew(left: usize, right: usize, vp_init: VP) -> Self;
+    fn left_cnt(&self) -> usize;
+    fn right_cnt(&self)-> usize; 
+    fn left_vertices(&self) -> std::slice::Iter<Vertex>;
+    fn right_vertices(&self) -> std::slice::Iter<Vertex>;
 }

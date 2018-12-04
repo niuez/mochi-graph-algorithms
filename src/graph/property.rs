@@ -12,3 +12,7 @@ impl<W> Weighted for W where W: Property + std::ops::Add<Output=W> + std::cmp::O
 pub trait NonNegativeWeighted: Weighted {}
 
 impl NonNegativeWeighted for usize {}
+
+pub trait Capacity: Property + std::ops::Add<Output=Self> + std::ops::Sub<Output=Self> + std::cmp::Ord {}
+
+impl Capacity for usize {}

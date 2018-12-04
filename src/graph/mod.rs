@@ -6,6 +6,7 @@ pub mod dynamic_undirected_graph;
 pub mod bipartite_graph;
 pub mod matching;
 pub mod shortest_path;
+pub mod network;
 
 use graph::property::*;
 

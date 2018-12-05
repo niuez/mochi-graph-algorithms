@@ -1,4 +1,5 @@
 pub mod ford_fulkerson;
+pub mod dinic;
 
 use graph::*;
 use graph::directed_graph::*;

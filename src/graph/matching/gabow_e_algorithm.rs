@@ -34,7 +34,7 @@ fn rematch(mate: &mut Vec<Vertex>, label: &Vec<GLabel>, v: Vertex, w: Vertex) {
     }
 }
 
-fn assign_label(mate: & Vec<Vertex>, label: &mut Vec<GLabel>, first: &mut Vec<Vertex>, x: Vertex, y: Vertex, e: Edge) {
+fn assign_label(mate: & Vec<Vertex>, label: &mut Vec<GLabel>, first: &mut Vec<Vertex>, x: Vertex, y: Vertex, e: Edge, que: &mut VecDeque<Vertex>) {
     let mut r = eval_first(label,first,x);
     let mut s = eval_first(label,first,y);
     let num = e.index as i32;
@@ -55,6 +55,7 @@ fn assign_label(mate: & Vec<Vertex>, label: &mut Vec<GLabel>, first: &mut Vec<Ve
         }
         let mut v = first[x.0];
         while v != join {
+            que.push_back(v);
             label[v.0] = GLabel::Edge(e);
             first[v.0] = join;
             if let GLabel::Vertex(lm) = label[mate[v.0].0] {
@@ -63,6 +64,7 @@ fn assign_label(mate: & Vec<Vertex>, label: &mut Vec<GLabel>, first: &mut Vec<Ve
         }
         let mut v = first[y.0];
         while v != join {
+            que.push_back(v);
             label[v.0] = GLabel::Edge(e);
             first[v.0] = join;
             if let GLabel::Vertex(lm) = label[mate[v.0].0] {
@@ -98,10 +100,10 @@ fn augment_check<'a,VP: Property,EP: Property,G: Undirected<'a,VP,EP>>(g: &'a G,
                     return true;
                 }
                 else if let GLabel::Vertex(_) = label[y.0] {
-                    assign_label(mate,label,first, x, y, e.clone());
+                    assign_label(mate,label,first, x, y, e.clone(),&mut que);
                 }
                 else if let GLabel::Edge(_) = label[y.0] {
-                    assign_label(mate,label,first, x, y, e.clone());
+                    assign_label(mate,label,first, x, y, e.clone(),&mut que);
                 }
                 else if let GLabel::NonOuter(_) = label[mate[y.0].0] {
                     label[mate[y.0].0] = GLabel::Vertex(x);

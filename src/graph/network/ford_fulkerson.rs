@@ -8,19 +8,19 @@ use std::cmp::min;
 fn ff_dfs<C: Capacity>(g: &DirectedGraph<usize,Edge>, v: &Vertex, t: &Vertex, zero: C, cap: &mut Vec<C>, used: &mut Vec<bool>, f: C) -> C {
     if v == t { f }
     else {
+        let mut now = f;
         used[v.0] = true;
         for e in g.delta(v) {
             if !used[e.to.0] && cap[e.index] > zero {
-                let c = min(f, cap[e.index]);
+                let c = min(now, cap[e.index]);
                 let d = ff_dfs(g, &e.to, t, zero, cap, used, c);
-                if d > zero {
-                    cap[e.index] = cap[e.index] -  d;
-                    cap[g.eprop(&e).index] = cap[g.eprop(&e).index] + d;
-                    return d;
-                }
+                cap[e.index] = cap[e.index] -  d;
+                cap[g.eprop(&e).index] = cap[g.eprop(&e).index] + d;
+                now = now - d;
             }
         }
-        zero
+        now = f - now;
+        now
     }
 }
 

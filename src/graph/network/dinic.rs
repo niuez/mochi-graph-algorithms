@@ -26,18 +26,18 @@ fn g_level<C: Capacity>(g: &DirectedGraph<usize,Edge>, s: &Vertex, zero: C, cap:
 fn dinic_dfs<C: Capacity>(g: &DirectedGraph<usize,Edge>, v: &Vertex, t: &Vertex, zero: C, cap: &mut Vec<C>, level: &Vec<i32>, f: C) -> C {
     if v == t { f }
     else {
+        let mut now = f;
         for e in g.delta(v) {
             if cap[e.index] > zero && level[e.to.0] > level[v.0] {
-                let mi = min(f, cap[e.index]);
-                let fl = dinic_dfs(g,&e.to,t,zero,cap,level,mi);
-                if fl > zero {
-                    cap[e.index] = cap[e.index] - fl;
-                    cap[g.eprop(&e).index] = cap[g.eprop(&e).index] + fl;
-                    return fl;
-                }
+                let c = min(now, cap[e.index]);
+                let d = dinic_dfs(g,&e.to,t,zero,cap,level,c);
+                cap[e.index] = cap[e.index] - d;
+                cap[g.eprop(&e).index] = cap[g.eprop(&e).index] + d;
+                now = now - d;
             }
         }
-        zero
+        now = f - now;
+        now
     }
 }
 

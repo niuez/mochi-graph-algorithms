@@ -21,8 +21,8 @@ mod tests {
             let w = rand::thread_rng().gen_range(1,1001);
             g.add_edge(&Vertex(a), &Vertex(b), w);
         }
-        let bf_res = bellman_ford(&g, Vertex(0), 0, |w| w);
-        let di_res = dijkstra(&g, Vertex(0), 0, |w| w);
+        let bf_res = bellman_ford(&g, Vertex(0), |w| w);
+        let di_res = dijkstra(&g, Vertex(0), |w| w);
         let ans: Vec<Option<usize>> = bf_res.iter().map(|r| {
             match r {
                 BFResult::Some(w) => Some(*w),

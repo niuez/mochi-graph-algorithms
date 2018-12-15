@@ -7,7 +7,7 @@ title: Scaling Dijkstra's Algorithm
 
 ## Summary
 
-Scaling Dijkstra's Algorihtm は整数の重み付きグラフの単一始点の最短経路を`O(Mlog(Maximum Weight))`で求めるAlgorithmである.
+Scaling Dijkstra's Algorihtm は非負整数の重み付きグラフの単一始点の最短経路を`O(Elog(Maximum Weight))`で求めるAlgorithmである.
 
 Dijkstraを線形計算量でしようと思うと, 最短距離分の配列のメモリが必要で出来ない場合が多いが,
 

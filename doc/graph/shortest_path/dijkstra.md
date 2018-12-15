@@ -7,7 +7,7 @@ title: Dijkstra's Algorithm
 
 ## Summary
 
-Bellman-Fordは重み付きグラフの単一始点の最短経路を`O((E + V)logV) (binary heap)`で求めるAlgorithmである.
+Dijkstra's Algorithm は非負重み付きグラフの単一始点の最短経路を`O((E + V)logV) (binary heap)`で求めるAlgorithmである.
 
 `Pairing Heap`などを使えばもっと早い.
 

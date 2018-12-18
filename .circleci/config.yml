@@ -11,4 +11,9 @@ jobs:
           name: dijkstra_test
           command: |
             cargo test dijkstra_test -- --nocapture
+      - run:
+          name: scaling_dijkstra_test
+          command: |
+            cargo test scaling_dijkstra_test -- --nocapture
+          
 

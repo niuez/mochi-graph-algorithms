@@ -15,5 +15,9 @@ jobs:
           name: scaling_dijkstra_test
           command: |
             cargo test scaling_dijkstra_test -- --nocapture
+      - run:
+          name: dinic_test
+          command: |
+            cargo test dinic_test -- --nocapture
           
 

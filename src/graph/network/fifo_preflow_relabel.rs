@@ -5,7 +5,7 @@ use graph::network::*;
 use std::collections::vec_deque::*;
 use std::cmp::min;
 
-pub fn fifo_preflow_push<C: Capacity>(net: &mut Network<C>) -> C {
+pub fn fifo_preflow_relabel<C: Capacity>(net: &mut Network<C>) -> C {
     let mut que = VecDeque::<Vertex>::new();
     let ref mut cap = &mut net.cap;
     let ref g = & net.g;

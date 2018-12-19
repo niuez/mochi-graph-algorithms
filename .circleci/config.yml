@@ -19,5 +19,9 @@ jobs:
           name: dinic_test
           command: |
             cargo test dinic_test -- --nocapture
+      - run:
+          name: fifo_pr_test
+          command: |
+            cargo test fifo_pr_test -- --nocapture
           
 

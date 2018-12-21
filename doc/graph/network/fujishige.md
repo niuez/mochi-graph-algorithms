@@ -3,7 +3,7 @@ layout: default
 title: Fujishige's Algorithm
 ---
 
-# FIFO Preflow Relabel Algorithm
+# Fujishige's Algorithm
 
 ## Summary
 

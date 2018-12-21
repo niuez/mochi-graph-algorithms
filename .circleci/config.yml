@@ -23,5 +23,9 @@ jobs:
           name: fifo_pr_test
           command: |
             cargo test fifo_pr_test -- --nocapture
+      - run:
+          name: fujishige_test
+          command: |
+            cargo test fujishige_test -- --nocapture
           
 

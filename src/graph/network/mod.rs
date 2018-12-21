@@ -1,6 +1,7 @@
 pub mod ford_fulkerson;
 pub mod dinic;
 pub mod fifo_preflow_relabel;
+pub mod fujishige;
 
 use graph::*;
 use graph::directed_graph::*;

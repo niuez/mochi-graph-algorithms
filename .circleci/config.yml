@@ -27,5 +27,9 @@ jobs:
           name: fujishige_test
           command: |
             cargo test fujishige_test -- --nocapture
+      - run:
+          name: dial_test
+          command: |
+            cargo test dial_test -- --nocapture
           
 

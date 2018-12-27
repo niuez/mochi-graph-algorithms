@@ -31,5 +31,7 @@ jobs:
           name: dial_test
           command: |
             cargo test dial_test -- --nocapture
-          
-
+      - run:
+          name: d_heap_dijkstra_test
+          command: |
+            cargo test d_heap_dijkstra_test -- --nocapture

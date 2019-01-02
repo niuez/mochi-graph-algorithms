@@ -23,7 +23,7 @@ impl<T: Ord> DAnyHeap<T> {
             self.heap.swap(0,l - 1);
             let temp = self.heap.pop().unwrap();
             for i in 1..min(self.d + 1, self.heap.len()) {
-                if self.heap[i].cmp(&self.heap[0]) == Ordering::Less {
+                if self.heap[i].cmp(&self.heap[0]) == Ordering::Greater {
                     self.heap.swap(0, i);
                 }
             }
@@ -35,10 +35,10 @@ impl<T: Ord> DAnyHeap<T> {
         self.heap.push(t);
         let mut i = self.heap.len() - 1;
         while i > 0 {
-            if self.heap[i].cmp(&self.heap[(i - 1) / 2]) == Ordering::Less {
-                self.heap.swap(i, (i - 1) / 2);
+            if self.heap[i].cmp(&self.heap[(i - 1) / self.d]) == Ordering::Greater {
+                self.heap.swap(i, (i - 1) / self.d);
             }
-            i = (i - 1) / 2;
+            i = (i - 1) / self.d;
         }
     }
 }
@@ -71,7 +71,7 @@ where VP: Property , EP: Property,G: Directed<'a,VP,EP> + StaticGraph<'a,VP,EP>,
     let m = g.edges_cnt();
     let mut dist = vec![None ; n];
     dist[s.0] = Some(W::zero());
-    
+
     let mut heap = DAnyHeap::new(2 + (m + n - 1) / n);
 
     heap.push(DijkstraNode::<W>{ dist : dist[s.0] , ver : s});

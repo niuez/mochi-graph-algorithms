@@ -12,3 +12,5 @@ pub mod fujishige_test;
 pub mod dial_test;
 #[cfg(test)]
 pub mod d_heap_dijkstra_test;
+#[cfg(test)]
+pub mod d_vs_bin_test;

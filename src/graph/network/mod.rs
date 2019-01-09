@@ -40,3 +40,8 @@ impl<C: Capacity> Network<C> {
         }
     }
 }
+
+pub trait MaxFlow<C> where C: Capacity {  }
+
+impl<C, F> MaxFlow<C> for F where C: Capacity, F: Fn(&mut Network<C>) -> C {
+}

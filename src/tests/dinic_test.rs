@@ -22,6 +22,6 @@ fn dinic_test() {
         }
         let mut net1 = Network::build(&g, Vertex(0), Vertex(1), |c| c.clone());
         let mut net2 = Network::build(&g, Vertex(0), Vertex(1), |c| c.clone());
-        assert!(ford_fulkerson(&mut net1, 100 * 400 + 10) == dinic(&mut net2, 100 * 400  + 10), "not collect");
+        assert!(ford_fulkerson(&mut net1) == dinic(&mut net2), "not collect");
     }
 }

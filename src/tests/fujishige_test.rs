@@ -22,7 +22,7 @@ fn fujishige_test() {
         }
         let mut net1 = Network::build(&g, Vertex(0), Vertex(1), |c| c.clone());
         let mut net2 = Network::build(&g, Vertex(0), Vertex(1), |c| c.clone());
-        let ans1 = ford_fulkerson(&mut net1, 100 * 400 + 10);
+        let ans1 = ford_fulkerson(&mut net1);
         let ans2 = fujishige(&mut net2);
         assert_eq!(ans1, ans2);
     }

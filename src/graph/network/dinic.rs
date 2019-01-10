@@ -41,12 +41,16 @@ fn dinic_dfs<C: Capacity>(g: &DirectedGraph<usize,Edge>, v: &Vertex, t: &Vertex,
     }
 }
 
-pub fn dinic<C: Capacity>(net: &mut Network<C>, inf: C) -> C {
+pub fn dinic<C: Capacity>(net: &mut Network<C>) -> C {
     let ref mut cap = &mut net.cap;
     let ref g = & net.g;
     let s = net.source;
     let t = net.shink;
     let mut ans = C::zero();
+    let mut inf = C::zero();
+    for e in g.delta(&s) {
+        inf = inf + cap[e.index];
+    }
     loop {
         let level = g_level(g, &s, cap);
         if level[net.shink.0] >= 0 {

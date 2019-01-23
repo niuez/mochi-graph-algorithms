@@ -72,6 +72,5 @@ where V: Vertex, E: Edge,G: Graph<'a,V,E>, W: Weighted, F: Fn(&E) -> W {
             }
         }
     }
-
     dist
 }

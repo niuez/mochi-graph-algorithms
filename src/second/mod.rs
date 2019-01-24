@@ -2,6 +2,8 @@ pub mod property;
 pub mod directed_graph;
 pub mod undirected_graph;
 pub mod maxflow;
+pub mod bipartite_directed_graph;
+pub mod bipartite_undirected_graph;
 
 pub mod single_source_shortest_path;
 
@@ -43,4 +45,10 @@ pub fn to<E: Edge>(f: Vite, e: &E) -> Vite {
 
 pub trait Directed<'a,V: Vertex, E: Edge>: Graph<'a,V,E> {  }
 pub trait Undirected<'a,V: Vertex, E: Edge>: Graph<'a,V,E> {  }
+pub trait Bipartite<'a,V: Vertex, E: Edge>: Graph<'a,V,E> { 
+    fn left_size(&self) -> usize;
+    fn right_size(&self) -> usize;
+    fn left_vs(&self) -> std::slice::Iter<Vite>;
+    fn right_vs(&self) -> std::slice::Iter<Vite>;
+}
 

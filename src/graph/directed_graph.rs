@@ -1,54 +1,54 @@
 use graph::*;
-use graph::property::Property;
 
-/// struct for Directed Graph.
-pub struct DirectedGraph<VP: Property,EP: Property> {
-    n : usize,
-    m : usize,
-    g : Vec<Vec<Edge>>,
-    es : Vec<EP>,
-    vs : Vec<VP>
+pub struct DirectedGraph<V: Vertex, E: Edge> {
+    n: usize,
+    m: usize,
+    g: Vec<Vec<Eite>>,
+    es: Vec<E>,
+    vs: Vec<V>
 }
 
-impl<'a,VP : Property ,EP : Property> Graph<'a,VP,EP> for DirectedGraph<VP,EP> {
-    type EIter = std::slice::Iter<'a,Edge>;
-    
-    fn add_edge(&mut self , from : &Vertex , to : &Vertex , edge_prop : EP) {
-        self.g[from.0].push(Edge{index : self.m, from : from.clone() , to : to.clone()});
-        self.es.push(edge_prop);
+impl<'a,V: Vertex, E: Edge> Graph<'a,V,E> for DirectedGraph<V,E> {
+    type EsIter = std::slice::Iter<'a,Eite>;
+    fn add_edge(&mut self, e: E) {
+        let ei = Eite(self.m);
         self.m += 1;
+        self.g[e.from().0].push(ei);
+        self.es.push(e);
     }
-    fn vertices_cnt(&self) -> usize { self.n }
-    fn edges_cnt(&self) -> usize { self.m }
-    fn vprop_mut(&mut self, v : &Vertex) -> &mut VP {
-        &mut self.vs[v.0]
-    }
-    fn vprop(&self, v : &Vertex) -> &VP {
-        & self.vs[v.0]
-    }
-    fn eprop_mut(&mut self, e : &Edge) -> &mut EP {
-        &mut self.es[e.index]
-    }
-    fn eprop(&self, e : &Edge) -> &EP {
-        & self.es[e.index]
-    }
-
-    fn delta(&'a self , v : &Vertex) -> Self::EIter {
+    fn delta(&'a self, v: &Vite) -> Self::EsIter {
         self.g[v.0].iter()
     }
-}
-
-impl<'a,VP : Property ,EP : Property> StaticGraph<'a,VP,EP> for DirectedGraph<VP,EP> {
-    fn new(n : usize , vp_init: VP) -> Self {
-        DirectedGraph {
-            n: n,
-            m: 0,
-            g: vec![Vec::<Edge>::new(); n],
-            es: Vec::<EP>::new(),
-            vs: vec![vp_init; n]
-        }
+    fn edge(&self, e: &Eite) -> &E {
+        &self.es[e.0]
+    }
+    fn vertex(&self, v: &Vite) -> &V {
+       &self.vs[v.0]
+    }
+    fn v_size(&self) -> usize {
+        self.n
+    }
+    fn e_size(&self) -> usize {
+        self.m
     }
 }
 
-impl<'a,VP: Property, EP: Property> Directed<'a,VP,EP> for DirectedGraph<VP,EP> {
+impl<'a,V: Vertex, E: Edge> Directed<'a,V,E> for DirectedGraph<V,E> {  }
+
+impl<V: Vertex, E: Edge> DirectedGraph<V,E> {
+    pub fn new(n: usize) -> Self {
+        let mut g = DirectedGraph {
+            n: n,
+            m: 0,
+            g: vec![Vec::<Eite>::new(); n],
+            es: Vec::<E>::new(),
+            vs: Vec::<V>::new()
+        };
+        for i in 0..n {
+            g.vs.push(V::new(i));
+        }
+        g
+    }
 }
+
+

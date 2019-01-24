@@ -7,7 +7,7 @@ use std::cmp::Ordering;
 #[derive(Eq)]
 struct DijkstraNode<W: NonNegativeWeighted> {
     dist: Option<W>,
-    ver : Vertex,
+    ver : Vite,
 }
 
 impl<W: NonNegativeWeighted> Ord for DijkstraNode<W> {
@@ -26,13 +26,9 @@ impl<W: NonNegativeWeighted> PartialEq for DijkstraNode<W> {
     }
 }
 
-/// return distances from s to all vertices in graph bt Dijkstra's Algorithm with using binary heap.
-/// running time O((E + V) log V)
-/// if a vertex cannot reach from s, result of the vertex is None.
-/// else, the result is Some(distance)
-pub fn dijkstra<'a,VP,EP,G,W,F>(g: &'a G, s: Vertex,fp: F) -> Vec<Option<W>>
-where VP: Property , EP: Property,G: Directed<'a,VP,EP> + StaticGraph<'a,VP,EP>, W: NonNegativeWeighted , F: Fn(&EP) -> &W {
-    let n = g.vertices_cnt();
+pub fn dijkstra_s3p<'a,V,E,G,W,F>(g: &'a G, s: Vite,fp: F) -> Vec<Option<W>>
+where V: Vertex , E: Edge,G: Graph<'a,V,E>, W: NonNegativeWeighted , F: Fn(&E) -> W {
+    let n = g.v_size();
     let mut dist = vec![None ; n];
     dist[s.0] = Some(W::zero());
     
@@ -45,21 +41,18 @@ where VP: Property , EP: Property,G: Directed<'a,VP,EP> + StaticGraph<'a,VP,EP>,
             if let Some(now) = dist[v.0] {
                 if now < d { continue }
             }
-            for e in g.delta(&v) {
-                let ok = match dist[e.to.0] {
+            for ei in g.delta(&v) {
+                let e = g.edge(ei);
+                let to = to(v,e);
+                if match dist[to.0] {
                     Some(d2) => {
-                        if *fp(g.eprop(&e)) + d < d2 {
-                            true
-                        }
-                        else {
-                            false
-                        }
-                    },
+                        if fp(e) + d < d2 { true }
+                        else { false }
+                    }
                     None => true
-                };
-                if ok {
-                    dist[e.to.0] = Some(*fp(g.eprop(&e)) + d);
-                    heap.push(DijkstraNode::<W>{ dist: dist[e.to.0] , ver : e.to.clone() });
+                } {
+                    dist[to.0] = Some(fp(e) + d);
+                    heap.push(DijkstraNode::<W>{ dist: dist[to.0] , ver : to.clone() });
                 }
             }
         }

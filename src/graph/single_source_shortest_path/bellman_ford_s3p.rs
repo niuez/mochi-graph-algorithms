@@ -1,5 +1,5 @@
-use second::*;
-use second::property::*;
+use graph::*;
+use graph::property::*;
 
 #[derive(Clone,Copy,PartialEq,Eq)]
 pub enum BFResult<W> {

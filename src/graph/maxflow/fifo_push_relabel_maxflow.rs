@@ -1,6 +1,6 @@
-use second::*;
-use second::property::*;
-use second::maxflow::*;
+use graph::*;
+use graph::property::*;
+use graph::maxflow::*;
 
 use std::collections::vec_deque::*;
 use std::cmp::min;

@@ -1,4 +1,3 @@
-/// `Property` trait is for properties of edges.
 pub trait Property: Copy {}
 
 impl<P> Property for P where P: Copy {}
@@ -18,12 +17,10 @@ impl ZeroP for i16 { fn zero() -> Self { 0 } }
 impl ZeroP for i32 { fn zero() -> Self { 0 } }
 impl ZeroP for i64 { fn zero() -> Self { 0 } }
 
-/// `Weighted` trait is for properties of edges such as distance,cost and so on.
 pub trait Weighted: Property + std::ops::Add<Output=Self> + std::cmp::Ord + ZeroP {}
 
 impl<W> Weighted for W where W: Property + std::ops::Add<Output=W> + std::cmp::Ord + ZeroP {}
 
-/// `NonNegativeWeighted` trait is for algorithm such Dijkstra's Algorithm.
 pub trait NonNegativeWeighted: Weighted {}
 
 impl NonNegativeWeighted for usize {}

@@ -1,5 +1,5 @@
-use second::*;
-use second::property::*;
+use graph::*;
+use graph::property::*;
 
 use std::collections::vec_deque::*;
 use std::cmp::max;

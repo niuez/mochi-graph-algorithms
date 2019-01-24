@@ -1,5 +1,5 @@
-use second::*;
-use second::property::*;
+use graph::*;
+use graph::property::*;
 use std::cmp::max;
 
 pub fn dial<'a,V,E,G,F>(g: &'a G, s: Vite,fp: F) -> Vec<Option<usize>>

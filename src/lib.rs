@@ -1,5 +1,5 @@
 pub mod graph;
-pub mod second;
+pub mod graph;
 
 #[cfg(test)]
 mod tests;

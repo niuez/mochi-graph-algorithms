@@ -3,9 +3,9 @@ pub mod fifo_push_relabel_maxflow;
 pub mod ford_fulkerson_maxflow;
 pub mod fujishige_maxflow;
 
-use second::*;
-use second::directed_graph::*;
-use second::property::*;
+use graph::*;
+use graph::directed_graph::*;
+use graph::property::*;
 
 pub struct MFlowV {
     pub i: usize

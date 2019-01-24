@@ -1,1 +1,1 @@
-pub mod gabow_e_algorithm_cnbm;
+pub mod gabow_e_algorithm;

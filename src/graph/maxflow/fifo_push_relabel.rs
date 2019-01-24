@@ -5,7 +5,7 @@ use graph::maxflow::*;
 use std::collections::vec_deque::*;
 use std::cmp::min;
 
-pub fn fifo_preflow_relabel_maxflow<C: Capacity>(net: &mut MFlowNetWork<C>) -> C {
+pub fn fifo_push_relabel_maxflow<C: Capacity>(net: &mut MFlowNetWork<C>) -> C {
     let mut que = VecDeque::<Vite>::new();
     let ref mut cap = &mut net.cap;
     let ref g = & net.g;

@@ -10,7 +10,3 @@ pub mod fifo_pr_test;
 pub mod fujishige_test;
 #[cfg(test)]
 pub mod dial_test;
-#[cfg(test)]
-pub mod d_heap_dijkstra_test;
-#[cfg(test)]
-pub mod d_vs_bin_test;

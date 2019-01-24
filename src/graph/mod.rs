@@ -9,6 +9,8 @@ pub mod maxflow;
 pub mod cardinality_bipartite_maching;
 pub mod cardinality_nonbipartite_matching;
 
+use graph::property::*;
+
 #[derive(Clone,Copy,Eq,PartialEq,Debug)]
 pub struct Vite(pub usize);
 
@@ -31,6 +33,11 @@ impl Vertex for usize {
 }
 
 impl Edge for (usize,usize) { 
+    fn from(&self) -> Vite { Vite(self.0) }
+    fn to(&self) -> Vite { Vite(self.1) }
+}
+
+impl<P> Edge for (usize,usize,P) where P: Property { 
     fn from(&self) -> Vite { Vite(self.0) }
     fn to(&self) -> Vite { Vite(self.1) }
 }

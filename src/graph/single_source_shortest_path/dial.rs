@@ -2,7 +2,7 @@ use graph::*;
 use graph::property::*;
 use std::cmp::max;
 
-pub fn dial<'a,V,E,G,F>(g: &'a G, s: Vite,fp: F) -> Vec<Option<usize>>
+pub fn dial_s3p<'a,V,E,G,F>(g: &'a G, s: Vite,fp: F) -> Vec<Option<usize>>
 where V: Vertex, E: Edge, G: Graph<'a,V,E>, F: Fn(&E) -> usize {
     let n = g.v_size();
     let mut mv = usize::zero();

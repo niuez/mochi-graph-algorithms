@@ -30,7 +30,7 @@ where V: Vertex, E: Edge, G: Bipartite<'a,V,E> + Undirected<'a,V,E> {
     false
 }
 
-pub fn hopcroft_karp<'a,V,E,G>(g: &'a G) -> Vec<(Vite,Vite)>
+pub fn hopcroft_karp_cbm<'a,V,E,G>(g: &'a G) -> Vec<(Vite,Vite)>
 where V: Vertex, E: Edge, G: Bipartite<'a,V,E> + Undirected<'a,V,E> {
     let mut ans = Vec::<(Vite,Vite)>::new();
     let n = g.v_size();

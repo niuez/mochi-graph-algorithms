@@ -1,7 +1,7 @@
-pub mod dinic_maxflow;
-pub mod fifo_push_relabel_maxflow;
-pub mod ford_fulkerson_maxflow;
-pub mod fujishige_maxflow;
+pub mod dinic;
+pub mod fifo_push_relabel;
+pub mod ford_fulkerson;
+pub mod fujishige;
 
 use graph::*;
 use graph::directed_graph::*;

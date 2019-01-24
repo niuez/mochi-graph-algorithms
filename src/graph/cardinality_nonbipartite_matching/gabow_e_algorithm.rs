@@ -118,7 +118,7 @@ fn augment_check<'a,V,E,G>(g: &'a G, mate: &mut Vec<Vite>, label: &mut Vec<GLabe
 }
 
 
-pub fn gabow_e_algorithm<'a,V,E,G>(ug : &'a G) -> Vec<(Vite,Vite)> 
+pub fn gabow_e_algorithm_cnbm<'a,V,E,G>(ug : &'a G) -> Vec<(Vite,Vite)> 
 where V: Vertex , E: Edge, G: Undirected<'a,V,E> {
     let mut ans = Vec::<(Vite,Vite)>::new();
     let n = ug.v_size();

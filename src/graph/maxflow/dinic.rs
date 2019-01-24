@@ -45,7 +45,7 @@ fn dinic_dfs<C: Capacity>(g: &DirectedGraph<MFlowV,MFlowE>, v: &Vite, t: &Vite,c
     }
 }
 
-pub fn dinic<C: Capacity>(net: &mut MFlowNetWork<C>) -> C {
+pub fn dinic_maxflow<C: Capacity>(net: &mut MFlowNetWork<C>) -> C {
     let ref mut cap = &mut net.cap;
     let ref g = & net.g;
     let s = net.source;

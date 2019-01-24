@@ -2,9 +2,9 @@ extern crate rand;
 
 use graph::*;
 use graph::directed_graph::*;
-use graph::network::*;
-use graph::network::fifo_preflow_relabel::*;
-use graph::network::dinic::*;
+use graph::maxflow::*;
+use graph::maxflow::fifo_push_relabel::*;
+use graph::maxflow::dinic::*;
 
 use self::rand::Rng;
 
@@ -13,15 +13,15 @@ fn dinic_test() {
     for _ in 0..50 {
         let v = 200;
         let e = 400;
-        let mut g = DirectedGraph::<usize,usize>::new(v, 0);
+        let mut g = DirectedGraph::<usize,(usize,usize,usize)>::new(v);
         for _ in 0..e {
             let a = rand::thread_rng().gen_range(0, v);
             let b = rand::thread_rng().gen_range(0, v);
             let c = rand::thread_rng().gen_range(0, 100);
-            g.add_edge(&Vertex(a), &Vertex(b), c);
+            g.add_edge((a,b,c));
         }
-        let mut net1 = Network::build(&g, Vertex(0), Vertex(1), |c| c.clone());
-        let mut net2 = Network::build(&g, Vertex(0), Vertex(1), |c| c.clone());
-        assert!(fifo_preflow_relabel(&mut net1) == dinic(&mut net2), "not collect");
+        let mut net1 = MFlowNetWork::build(&g, Vite(0), Vite(1), |c| c.2.clone());
+        let mut net2 = MFlowNetWork::build(&g, Vite(0), Vite(1), |c| c.2.clone());
+        assert!(fifo_push_relabel_maxflow(&mut net1) == dinic_maxflow(&mut net2), "not collect");
     }
 }

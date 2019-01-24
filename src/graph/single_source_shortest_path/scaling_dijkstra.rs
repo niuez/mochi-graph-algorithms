@@ -4,7 +4,7 @@ use graph::property::*;
 use std::collections::vec_deque::*;
 use std::cmp::max;
 
-pub fn scaling_dijkstra<'a,V,E,G,F>(g: &'a G, s: Vite,fp: F) -> Vec<Option<usize>>
+pub fn scaling_dijkstra_s3p<'a,V,E,G,F>(g: &'a G, s: Vite,fp: F) -> Vec<Option<usize>>
 where V: Vertex ,E: Edge,G: Graph<'a,V,E>, F: Fn(&E) -> usize {
     let n = g.v_size();
     let m = g.e_size();

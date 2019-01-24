@@ -1,4 +1,4 @@
-pub mod dijkstra_s3p;
-pub mod bellman_ford_s3p;
-pub mod dial_s3p; 
-pub mod scaling_dijkstra_s3p;
+pub mod dijkstra;
+pub mod bellman_ford;
+pub mod dial; 
+pub mod scaling_dijkstra;

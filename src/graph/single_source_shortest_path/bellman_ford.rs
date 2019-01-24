@@ -8,7 +8,7 @@ pub enum BFResult<W> {
     None
 }
 
-pub fn bellman_ford<'a,V,E,G,W,F>(g: &'a G, s: Vite, fp: F) -> Vec<BFResult<W>>
+pub fn bellman_ford_s3p<'a,V,E,G,W,F>(g: &'a G, s: Vite, fp: F) -> Vec<BFResult<W>>
 where V: Vertex, E: Edge,G: Directed<'a,V,E>, W: Weighted, F: Fn(&E) -> W {
     let n = g.v_size();
     let mut dist = vec![BFResult::None ; n];

@@ -1,6 +1,7 @@
 pub mod property;
 pub mod directed_graph;
 pub mod undirected_graph;
+pub mod maxflow;
 
 pub mod single_source_shortest_path;
 

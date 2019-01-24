@@ -86,32 +86,29 @@ fn augment_check<'a,V,E,G>(g: &'a G, mate: &mut Vec<Vite>, label: &mut Vec<GLabe
 
     que.push_back(u);
 
-    loop {
-        if let Some(x) = que.pop_front() {
-            for e in g.delta(&x) {
-                let y = to(x,g.edge(e));
-                if mate[y.0] == Vite(0) && y != u {
-                    mate[y.0] = x;
-                    rematch(mate,label, x, y);
-                    for j in 0..n {
-                        label[j] = GLabel::NonOuter(-1);
-                    }
-                    return true;
+    while let Some(x) = que.pop_front() {
+        for e in g.delta(&x) {
+            let y = to(x,g.edge(e));
+            if mate[y.0] == Vite(0) && y != u {
+                mate[y.0] = x;
+                rematch(mate,label, x, y);
+                for j in 0..n {
+                    label[j] = GLabel::NonOuter(-1);
                 }
-                else if let GLabel::Vertex(_) = label[y.0] {
-                    assign_label(mate,label,first, x, y, e.0 as i32,&mut que);
-                }
-                else if let GLabel::Edge(_) = label[y.0] {
-                    assign_label(mate,label,first, x, y, e.0 as i32,&mut que);
-                }
-                else if let GLabel::NonOuter(_) = label[mate[y.0].0] {
-                    label[mate[y.0].0] = GLabel::Vertex(x);
-                    first[mate[y.0].0] = y;
-                    que.push_back(mate[y.0]);
-                }
+                return true;
+            }
+            else if let GLabel::Vertex(_) = label[y.0] {
+                assign_label(mate,label,first, x, y, e.0 as i32,&mut que);
+            }
+            else if let GLabel::Edge(_) = label[y.0] {
+                assign_label(mate,label,first, x, y, e.0 as i32,&mut que);
+            }
+            else if let GLabel::NonOuter(_) = label[mate[y.0].0] {
+                label[mate[y.0].0] = GLabel::Vertex(x);
+                first[mate[y.0].0] = y;
+                que.push_back(mate[y.0]);
             }
         }
-        else { break; }
     }
 
     false

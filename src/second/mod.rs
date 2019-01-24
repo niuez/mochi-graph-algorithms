@@ -1,11 +1,13 @@
 pub mod property;
 pub mod directed_graph;
 pub mod undirected_graph;
-pub mod maxflow;
 pub mod bipartite_directed_graph;
 pub mod bipartite_undirected_graph;
 
 pub mod single_source_shortest_path;
+pub mod maxflow;
+pub mod cardinality_bipartite_maching;
+pub mod cardinality_nonbipartite_matching;
 
 #[derive(Clone,Copy,Eq,PartialEq,Debug)]
 pub struct Vite(pub usize);
@@ -21,6 +23,16 @@ pub trait Edge {
 pub trait Vertex {
     fn new(id : usize) -> Self;
     fn id(&self) -> usize;
+}
+
+impl Vertex for usize {
+    fn new(id: usize) -> Self { id }
+    fn id(&self) -> usize { *self }
+}
+
+impl Edge for (usize,usize) { 
+    fn from(&self) -> Vite { Vite(self.0) }
+    fn to(&self) -> Vite { Vite(self.1) }
 }
 
 pub trait Graph<'a, V: Vertex, E: Edge> {

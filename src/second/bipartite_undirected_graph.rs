@@ -15,7 +15,7 @@ impl<'a, V: Vertex, E: Edge> Graph<'a,V,E> for BipartiteUndirectedGraph<V,E> {
     type EsIter = std::slice::Iter<'a,Eite>;
     fn add_edge(&mut self, e: E) { 
         assert!(e.from().0 < self.le);
-        assert!(self.le <= e.to().0 && e.to().0 < self.ri);
+        assert!(self.le <= e.to().0 && e.to().0 < self.le + self.ri);
         let ei = Eite(self.m);
         self.m += 1;
         self.g[e.from().0].push(ei);

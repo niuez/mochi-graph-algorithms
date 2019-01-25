@@ -1,12 +1,8 @@
 #[cfg(test)]
-pub mod dijkstra_test;
+pub mod single_source_shortest_path;
 #[cfg(test)]
-pub mod scaling_dijkstra_test;
+pub mod maxflow;
 #[cfg(test)]
-pub mod dinic_test;
+pub mod cardinality_bipartite_maching;
 #[cfg(test)]
-pub mod fifo_pr_test;
-#[cfg(test)]
-pub mod fujishige_test;
-#[cfg(test)]
-pub mod dial_test;
+pub mod cardinality_nonbipartite_matching;

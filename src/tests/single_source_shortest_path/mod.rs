@@ -6,3 +6,5 @@ pub mod dijkstra_test;
 pub mod scaling_dijkstra_test;
 #[cfg(test)]
 pub mod d_any_heap_dijkstra_test;
+#[cfg(test)]
+pub mod spfa_test;

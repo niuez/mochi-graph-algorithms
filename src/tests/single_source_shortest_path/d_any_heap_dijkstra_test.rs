@@ -8,7 +8,7 @@ use graph::single_source_shortest_path::d_any_heap_dijkstra::*;
 use self::rand::Rng;
 
 #[test]
-fn scaling_dijkstra_test() {
+fn d_any_heap_dijkstra_test() {
     for _ in 0..50{
         let v = 1000;
         let e = 3000;

@@ -8,7 +8,7 @@ use graph::single_source_shortest_path::dial::*;
 use self::rand::Rng;
 
 #[test]
-fn dijkstra_test() {
+fn dial_test() {
     for _ in 0..100 {
         let v = 200;
         let e = 400;

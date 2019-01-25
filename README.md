@@ -47,5 +47,8 @@
 - potential dijkstra (apsp)
 - wf(apsp)
 - Orlin scaling algorithm (maxflow) (difficult)
+- primal dual (mcstf)
+- min cost circulation
+- min cost transshipment
 - mst
 - wbm and wnbm

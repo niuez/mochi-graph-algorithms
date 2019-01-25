@@ -8,30 +8,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: dijkstra_test
+          name: test
           command: |
-            cargo test dijkstra_test -- --nocapture
-      - run:
-          name: scaling_dijkstra_test
-          command: |
-            cargo test scaling_dijkstra_test -- --nocapture
-      - run:
-          name: dinic_test
-          command: |
-            cargo test dinic_test -- --nocapture
-      - run:
-          name: fifo_pr_test
-          command: |
-            cargo test fifo_pr_test -- --nocapture
-      - run:
-          name: fujishige_test
-          command: |
-            cargo test fujishige_test -- --nocapture
-      - run:
-          name: dial_test
-          command: |
-            cargo test dial_test -- --nocapture
-      - run:
-          name: d_heap_dijkstra_test
-          command: |
-            cargo test d_heap_dijkstra_test -- --nocapture
+            cargo test

@@ -8,6 +8,7 @@ pub mod single_source_shortest_path;
 pub mod maxflow;
 pub mod cardinality_bipartite_maching;
 pub mod cardinality_nonbipartite_matching;
+pub mod all_pairs_shortest_path;
 
 use graph::property::*;
 

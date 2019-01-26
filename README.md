@@ -19,6 +19,11 @@
 - scaling_dijkstra
   O(Elog(Wmax))
 
+## all_pairs_shortest_path
+
+- Warshall-Floyd
+  O(V^3)
+
 ### maxflow
 
 - dinic
@@ -45,7 +50,6 @@
 
 - RHS-algorithm(maxflow)
 - potential dijkstra (apsp)
-- wf(apsp)
 - Orlin scaling algorithm (maxflow) (difficult)
 - primal dual (mcstf)
 - min cost circulation

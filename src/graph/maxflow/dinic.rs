@@ -24,17 +24,17 @@ fn g_level<C: Capacity>(g: &DirectedGraph<MFlowV,MFlowE>, s: &Vite, cap: &mut Ve
     level
 }
 
-fn dinic_dfs<C: Capacity>(g: &DirectedGraph<MFlowV,MFlowE>, v: &Vite, t: &Vite,cap: &mut Vec<C>, level: &Vec<i32>, f: C) -> C {
+fn dinic_dfs<C: Capacity>(g: &DirectedGraph<MFlowV,MFlowE>,iters: &mut Vec<std::slice::Iter<Eite>>, v: &Vite, t: &Vite,cap: &mut Vec<C>, level: &Vec<i32>, f: C) -> C {
     if v == t { f }
     else {
         let mut now = f;
-        for e in g.delta(v) {
+        while let Some(e) = iters[v.0].next() {
             let ee = g.edge(e);
             let to = to(*v,ee);
             let rev = ee.rev;
             if cap[e.0] > C::zero() && level[to.0] > level[v.0] {
                 let c = min(now, cap[e.0]);
-                let d = dinic_dfs(g,&to,t,cap,level,c);
+                let d = dinic_dfs(g,iters,&to,t,cap,level,c);
                 cap[e.0] = cap[e.0] - d;
                 cap[rev.0] = cap[rev.0] + d;
                 now = now - d;
@@ -58,8 +58,12 @@ pub fn dinic_maxflow<C: Capacity>(net: &mut MFlowNetWork<C>) -> C {
     loop {
         let level = g_level(g, &s, cap);
         if level[net.shink.0] >= 0 {
+            let mut iters = Vec::new();
+            for i in 0..g.v_size() {
+                iters.push(g.delta(&Vite(i)).clone());
+            }
             loop {
-                let f = dinic_dfs(&g, &s, &t,cap,&level, inf);
+                let f = dinic_dfs(&g,&mut iters, &s, &t,cap,&level, inf);
                 if f > C::zero() {
                     ans = ans + f;
                 }

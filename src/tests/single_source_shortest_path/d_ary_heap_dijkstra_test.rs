@@ -3,7 +3,7 @@ extern crate rand;
 use graph::*;
 use graph::directed_graph::*;
 use graph::single_source_shortest_path::dijkstra::*;
-use graph::single_source_shortest_path::d_any_heap_dijkstra::*;
+use graph::single_source_shortest_path::d_ary_heap_dijkstra::*;
 
 use self::rand::Rng;
 
@@ -20,7 +20,7 @@ fn d_any_heap_dijkstra_test() {
             g.add_edge((a,b,w));
         }
         let di_res = dijkstra_s3p(&g, Vite(0), |w| w.2);
-        let sc_res = d_any_heap_dijkstra_s3p(&g, Vite(0), |w| w.2);
+        let sc_res = d_ary_heap_dijkstra_s3p(&g, Vite(0), |w| w.2);
         for i in 0..v {
             if di_res[i] != sc_res[i] {
                 assert!(false, "not collect");

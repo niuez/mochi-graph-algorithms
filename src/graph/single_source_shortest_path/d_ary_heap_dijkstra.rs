@@ -4,16 +4,16 @@ use graph::property::*;
 use std::cmp::Ordering;
 use std::cmp::min;
 
-struct DAnyHeap<T> where T: Ord + Clone {
+struct DAryHeap<T> where T: Ord + Clone {
     heap: Vec<usize>,
     idx: Vec<usize>,
     val: Vec<Option<T>>,
     d: usize,
 }
 
-impl<T: Ord + Clone> DAnyHeap<T> {
-    fn new(d: usize, k: usize) -> DAnyHeap<T> {
-        DAnyHeap { 
+impl<T: Ord + Clone> DAryHeap<T> {
+    fn new(d: usize, k: usize) -> DAryHeap<T> {
+        DAryHeap { 
             heap: Vec::<usize>::new(),
             idx: vec![k+1;k],
             val: vec![None;k],
@@ -98,14 +98,14 @@ impl<W: NonNegativeWeighted> PartialEq for DijkstraNode<W> {
     }
 }
 
-pub fn d_any_heap_dijkstra_s3p<'a,V,E,G,F>(g: &'a G, s: Vite,fp: F) -> Vec<Option<usize>>
+pub fn d_ary_heap_dijkstra_s3p<'a,V,E,G,F>(g: &'a G, s: Vite,fp: F) -> Vec<Option<usize>>
 where V: Vertex , E: Edge,G: Graph<'a,V,E>, F: Fn(&E) -> usize {
     let n = g.v_size();
     let m = g.e_size();
     let mut dist = vec![None ; n];
     dist[s.0] = Some(usize::zero());
     
-    let mut heap = DAnyHeap::new(2 + (m + n - 1) / n, n);
+    let mut heap = DAryHeap::new(2 + (m + n - 1) / n, n);
 
     heap.push(s.0, DijkstraNode::<usize>{ dist : dist[s.0] , ver : s});
 

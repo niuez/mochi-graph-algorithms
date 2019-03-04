@@ -7,7 +7,6 @@ use std::cmp::max;
 pub fn scaling_dijkstra_s3p<'a,V,E,G,F>(g: &'a G, s: Vite,fp: F) -> Vec<Option<usize>>
 where V: Vertex ,E: Edge,G: Graph<'a,V,E>, F: Fn(&E) -> usize {
     let n = g.v_size();
-    let m = g.e_size();
     let mut mv = usize::zero();
     for i in 0..n {
         for e in g.delta(&Vite(i)) {
@@ -32,7 +31,7 @@ where V: Vertex ,E: Edge,G: Graph<'a,V,E>, F: Fn(&E) -> usize {
         let mut temp = vec![None; n];
         temp[s.0] = Some(usize::zero());
 
-        let mut vec : Vec<VecDeque<Vite>> = vec![VecDeque::<Vite>::new();m + 10];
+        let mut vec : Vec<VecDeque<Vite>> = vec![VecDeque::<Vite>::new();n + 10];
         vec[0].push_back(s);
 
         for d in 0..vec.len() {

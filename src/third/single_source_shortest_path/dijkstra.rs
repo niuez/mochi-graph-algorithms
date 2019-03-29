@@ -4,32 +4,32 @@ use third::property::*;
 use std::collections::BinaryHeap;
 use std::cmp::Ordering;
 
-struct DijkstraNode<W: NonNegativeWeighted, V: Vertex> {
+struct DijkstraNode<W: NNWeight, V: Vertex> {
     dist: Option<W>,
     ver : V,
 }
 
-impl<W: NonNegativeWeighted, V: Vertex> Ord for DijkstraNode<W, V> {
+impl<W: NNWeight, V: Vertex> Ord for DijkstraNode<W, V> {
     fn cmp(&self, other: &Self) -> Ordering {
         other.dist.cmp(&self.dist)
     }
 }
-impl<W: NonNegativeWeighted, V: Vertex> PartialOrd for DijkstraNode<W, V> {
+impl<W: NNWeight, V: Vertex> PartialOrd for DijkstraNode<W, V> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(other.dist.cmp(&self.dist))
     }
 }
-impl<W: NonNegativeWeighted, V: Vertex> PartialEq for DijkstraNode<W, V> {
+impl<W: NNWeight, V: Vertex> PartialEq for DijkstraNode<W, V> {
     fn eq(&self, other: &Self) -> bool {
         self.dist == other.dist
     }
 }
 
-impl<W: NonNegativeWeighted, V: Vertex> Eq for DijkstraNode<W, V> { }
+impl<W: NNWeight, V: Vertex> Eq for DijkstraNode<W, V> { }
 
 
 pub fn dijkstra<'a, V, E, G, W, F>(g: &'a G, s: &V, cost: F) -> Properties<Option<W>>
-where V: Vertex, E: Edge<VType=V> + 'a, G: Graph<'a, V, E>, W: NonNegativeWeighted, F: Fn(&E) -> W { 
+where V: Vertex, E: Edge<VType=V> + 'a, G: Graph<'a, V, E>, W: NNWeight, F: Fn(&E) -> W { 
 
     let n = g.v_size();
     let mut dist = Properties::new(n, &None);

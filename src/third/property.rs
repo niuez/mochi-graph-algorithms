@@ -19,21 +19,13 @@ pub trait Property: Copy + Zero {}
 
 impl<P> Property for P where P: Copy + Zero {}
 
+pub trait Weight: Property + std::ops::Add<Output=Self> + std::cmp::Ord {}
 
-pub trait Weighted: Property + std::ops::Add<Output=Self> + std::cmp::Ord {}
+impl<W> Weight for W where W: Property + std::ops::Add<Output=W> + std::cmp::Ord {}
 
-impl<W> Weighted for W where W: Property + std::ops::Add<Output=W> + std::cmp::Ord {}
+pub trait NNWeight: Weight {}
 
-pub trait NonNegativeWeighted: Weighted {}
-
-impl NonNegativeWeighted for usize {}
-
-pub trait Capacity: Weighted + std::ops::Sub<Output=Self>{}
-
-impl Capacity for usize {}
-
-pub trait Cost: Capacity + std::ops::Mul<Output=Self> {}
-
+impl NNWeight for usize {}
 
 pub trait ID {
     fn id(&self) -> usize;

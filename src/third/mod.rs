@@ -1,14 +1,16 @@
 pub mod property;
 pub mod directed_graph;
 
+pub mod single_source_shortest_path;
+
 use third::property::*;
 
 #[derive(Clone,Copy,Eq,PartialEq,Debug)]
 pub struct Eite(pub usize);
 
-pub trait Vertex: ID { }
+pub trait Vertex: ID + Clone { }
 
-impl<V: ID> Vertex for V { }
+impl<V: ID + Clone> Vertex for V { }
 
 pub trait Edge {
     type VType: Vertex;
@@ -37,6 +39,7 @@ impl<E: Edge> ID for IEdge<E> {
 impl<E: Edge> IEdge<E> {
     pub fn from(&self) -> &E::VType { self.0.from() }
     pub fn to(&self) -> &E::VType { self.0.to() }
+    pub fn edge(&self) -> &E { &self.0 }
 }
 
 pub struct AdjIter<'a, E: Edge + 'a> {
@@ -58,9 +61,10 @@ impl<'a, E: Edge + 'a> std::iter::Iterator for AdjIter<'a, E> {
     }
 }
 
-pub trait Graph<'a, V, E>: where V: Vertex, E: Edge<VType=V> {
+pub trait Graph<'a, V, E>: where V: Vertex, E: Edge<VType=V> + 'a {
+    type EIter: std::iter::Iterator<Item=&'a IEdge<E>>;
     fn add_edge(&mut self, e: E);
-    fn delta(&'a self, v: &V) -> AdjIter<E>;
+    fn delta(&'a self, v: &V) -> Self::EIter;
     fn v_size(&self) -> usize;
     fn e_size(&self) -> usize;
 }

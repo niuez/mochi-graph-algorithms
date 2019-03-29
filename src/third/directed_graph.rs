@@ -7,14 +7,15 @@ pub struct DirectedGraph<V: Vertex, E: Edge<VType=V>> {
     es: Vec<IEdge<E>>,
 }
 
-impl<'a, V, E> Graph<'a,V,E> for DirectedGraph<V,E> where V: Vertex, E: Edge<VType=V> {
+impl<'a, V, E> Graph<'a,V,E> for DirectedGraph<V,E> where V: Vertex, E: Edge<VType=V> + 'a {
+    type EIter = AdjIter<'a, E>;
     fn add_edge(&mut self, e: E) {
         let ei = Eite(self.m);
         self.m += 1;
         self.g[e.from().id()].push(ei);
         self.es.push(IEdge(e, ei.0));
     }
-    fn delta(&'a self, v: &V) -> AdjIter<E> {
+    fn delta(&'a self, v: &V) -> Self::EIter {
         AdjIter { iter: self.g[v.id()].iter(), edges: &self.es }
     }
     fn v_size(&self) -> usize {

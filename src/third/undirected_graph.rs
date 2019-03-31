@@ -41,6 +41,25 @@ impl<'a, E: Edge + 'a> std::iter::Iterator for AdjIter<'a, E> {
     }
 }
 
+pub struct EIter<'a, E: Edge + 'a> {
+    i: usize,
+    iter: std::slice::Iter<'a, E>,
+}
+
+impl<'a, E: Edge + 'a> std::iter::Iterator for EIter<'a, E> {
+    type Item = IUdEdge<'a, E>;
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.iter.next() {
+            Some(e) => {
+                let i = self.i;
+                self.i += 1;
+                Some(IUdEdge(&e, i, false))
+            }
+            None => None
+        }
+    }
+}
+
 pub struct UndirectedGraph<V: Vertex, E: Edge<VType=V>> {
     n: usize,
     m: usize,
@@ -49,7 +68,8 @@ pub struct UndirectedGraph<V: Vertex, E: Edge<VType=V>> {
 }
 
 impl<'a, V, E> Graph<'a,V,E,IUdEdge<'a, E>> for UndirectedGraph<V,E> where V: Vertex, E: Edge<VType=V> + 'a {
-    type EIter = AdjIter<'a, E>;
+    type AdjIter = AdjIter<'a, E>;
+    type EIter = EIter<'a, E>;
     fn add_edge(&mut self, e: E) {
         let ei = self.m;
         self.m += 1;
@@ -57,8 +77,11 @@ impl<'a, V, E> Graph<'a,V,E,IUdEdge<'a, E>> for UndirectedGraph<V,E> where V: Ve
         self.g[e.to().id()].push(UEite(ei, false));
         self.es.push(e);
     }
-    fn delta(&'a self, v: &V) -> Self::EIter {
+    fn delta(&'a self, v: &V) -> Self::AdjIter {
         AdjIter { iter: self.g[v.id()].iter(), edges: &self.es }
+    }
+    fn edges(&'a self) -> Self::EIter {
+        EIter { i: 0, iter: self.es.iter() }
     }
     fn v_size(&self) -> usize {
         self.n
@@ -78,6 +101,8 @@ impl<V: Vertex, E: Edge<VType=V>> UndirectedGraph<V,E> {
         }
     }
 }
+
+impl<'a, V, E> Undirected<'a, V, E, IUdEdge<'a, E>> for UndirectedGraph<V, E> where V: Vertex, E: Edge<VType=V> + 'a {}
 
 #[test]
 fn undigraph_test() {

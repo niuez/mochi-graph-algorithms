@@ -34,6 +34,25 @@ impl<'a, E: Edge + 'a> std::iter::Iterator for AdjIter<'a, E> {
     }
 }
 
+pub struct EIter<'a, E: Edge + 'a> {
+    i: usize,
+    iter: std::slice::Iter<'a, E>,
+}
+
+impl<'a, E: Edge + 'a> std::iter::Iterator for EIter<'a, E> {
+    type Item = IDiEdge<'a, E>;
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.iter.next() {
+            Some(e) => {
+                let i = self.i;
+                self.i += 1;
+                Some(IDiEdge(&e, i))
+            }
+            None => None
+        }
+    }
+}
+
 pub struct DirectedGraph<V: Vertex, E: Edge<VType=V>> {
     n: usize,
     m: usize,
@@ -42,15 +61,19 @@ pub struct DirectedGraph<V: Vertex, E: Edge<VType=V>> {
 }
 
 impl<'a, V, E> Graph<'a,V,E,IDiEdge<'a, E>> for DirectedGraph<V,E> where V: Vertex, E: Edge<VType=V> + 'a {
-    type EIter = AdjIter<'a, E>;
+    type AdjIter = AdjIter<'a, E>;
+    type EIter = EIter<'a, E>;
     fn add_edge(&mut self, e: E) {
         let ei = Eite(self.m);
         self.m += 1;
         self.g[e.from().id()].push(ei);
         self.es.push(e);
     }
-    fn delta(&'a self, v: &V) -> Self::EIter {
+    fn delta(&'a self, v: &V) -> Self::AdjIter {
         AdjIter { iter: self.g[v.id()].iter(), edges: &self.es }
+    }
+    fn edges(&'a self) -> Self::EIter {
+        EIter { i: 0, iter: self.es.iter() }
     }
     fn v_size(&self) -> usize {
         self.n
@@ -70,6 +93,8 @@ impl<V: Vertex, E: Edge<VType=V>> DirectedGraph<V,E> {
         }
     }
 }
+
+impl<'a, V, E> Directed<'a, V, E, IDiEdge<'a, E>> for DirectedGraph<V, E> where V: Vertex, E: Edge<VType=V> + 'a {}
 
 #[test]
 fn digraph_test() {

@@ -35,10 +35,15 @@ pub trait IEdge<V, E> where V: Vertex, E: Edge<VType=V> {
     fn edge(&self) -> &E;
 }
 
-pub trait Graph<'a, V, E, IE>: where V: Vertex, E: Edge<VType=V> + 'a, IE: IEdge<V, E> {
+pub trait Graph<'a, V, E, IE> where V: Vertex, E: Edge<VType=V> + 'a, IE: IEdge<V, E> {
+    type AdjIter: std::iter::Iterator<Item=IE>;
     type EIter: std::iter::Iterator<Item=IE>;
     fn add_edge(&mut self, e: E);
-    fn delta(&'a self, v: &V) -> Self::EIter;
+    fn delta(&'a self, v: &V) -> Self::AdjIter;
+    fn edges(&'a self) -> Self::EIter;
     fn v_size(&self) -> usize;
     fn e_size(&self) -> usize;
 }
+
+pub trait Directed<'a, V, E, IE>: Graph<'a, V, E, IE> where V: Vertex, E: Edge<VType=V> + 'a, IE: IEdge<V, E> {}
+pub trait Undirected<'a, V, E, IE>: Graph<'a, V, E, IE> where V: Vertex, E: Edge<VType=V> + 'a, IE: IEdge<V, E> {}

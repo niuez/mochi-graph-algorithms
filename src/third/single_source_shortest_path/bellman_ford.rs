@@ -8,8 +8,8 @@ pub enum BFResult<W> {
     None
 }
 
-pub fn bellman_ford<'a, V, E, IE, G, W, F>(g: &'a G, s: &V, cost: F) -> Properties<BFResult<W>>
-where V: Vertex, E: Edge<VType=V> + 'a, IE: AdjEdge<V, E>, G: Directed<'a, V, E, IE>, W: Weight, F: Fn(&E) -> W {
+pub fn bellman_ford<'a, V, E, AE, G, W, F>(g: &'a G, s: &V, cost: F) -> Properties<BFResult<W>>
+where V: Vertex, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Directed<'a, V, E, AE>, W: Weight, F: Fn(&E) -> W {
     let n = g.v_size();
     let mut dist = Properties::new(n, &BFResult::None);
     dist[s] = BFResult::Some(W::zero());

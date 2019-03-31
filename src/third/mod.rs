@@ -29,13 +29,13 @@ impl<V, P> Edge for (V, V, P) where V: Vertex, P: Property {
     fn to(&self) -> &Self::VType { &self.1 }
 }
 
-pub trait IEdge<V, E> where V: Vertex, E: Edge<VType=V> {
+pub trait AdjEdge<V, E>: ID where V: Vertex, E: Edge<VType=V> {
     fn from(&self) -> &V;
     fn to(&self) -> &V;
     fn edge(&self) -> &E;
 }
 
-pub trait Graph<'a, V, E, IE> where V: Vertex, E: Edge<VType=V> + 'a, IE: IEdge<V, E> {
+pub trait Graph<'a, V, E, IE> where V: Vertex, E: Edge<VType=V> + 'a, IE: AdjEdge<V, E> {
     type AdjIter: std::iter::Iterator<Item=IE>;
     type EIter: std::iter::Iterator<Item=IE>;
     fn add_edge(&mut self, e: E);
@@ -45,5 +45,5 @@ pub trait Graph<'a, V, E, IE> where V: Vertex, E: Edge<VType=V> + 'a, IE: IEdge<
     fn e_size(&self) -> usize;
 }
 
-pub trait Directed<'a, V, E, IE>: Graph<'a, V, E, IE> where V: Vertex, E: Edge<VType=V> + 'a, IE: IEdge<V, E> {}
-pub trait Undirected<'a, V, E, IE>: Graph<'a, V, E, IE> where V: Vertex, E: Edge<VType=V> + 'a, IE: IEdge<V, E> {}
+pub trait Directed<'a, V, E, IE>: Graph<'a, V, E, IE> where V: Vertex, E: Edge<VType=V> + 'a, IE: AdjEdge<V, E> {}
+pub trait Undirected<'a, V, E, IE>: Graph<'a, V, E, IE> where V: Vertex, E: Edge<VType=V> + 'a, IE: AdjEdge<V, E> {}

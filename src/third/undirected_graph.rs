@@ -9,7 +9,7 @@ impl<'a, E: Edge + 'a> ID for IUdEdge<'a, E> {
     fn id(&self) -> usize { self.1 } 
 }
 
-impl<'a, V, E> IEdge<V, E> for IUdEdge<'a, E> 
+impl<'a, V, E> AdjEdge<V, E> for IUdEdge<'a, E> 
 where V: Vertex, E: Edge<VType=V> + 'a {
     fn from(&self) -> &E::VType { 
         match self.2 {

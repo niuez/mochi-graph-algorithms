@@ -9,7 +9,7 @@ impl<'a, E: Edge + 'a> ID for IDiEdge<'a, E> {
     fn id(&self) -> usize { self.1 }
 }
 
-impl<'a, V, E> IEdge<V, E> for IDiEdge<'a, E> where V: Vertex, E: Edge<VType=V> + 'a {
+impl<'a, V, E> AdjEdge<V, E> for IDiEdge<'a, E> where V: Vertex, E: Edge<VType=V> + 'a {
     fn from(&self) -> &E::VType { self.0.from() }
     fn to(&self) -> &E::VType { self.0.to() }
     fn edge(&self) -> &E { self.0 }

@@ -1,19 +1,53 @@
 use third::*;
 
+#[derive(Clone,Copy,Eq,PartialEq,Debug)]
+pub struct Eite(pub usize);
+
+pub struct IDiEdge<'a, E: Edge + 'a>(&'a E, usize);
+
+impl<'a, E: Edge + 'a> ID for IDiEdge<'a, E> {
+    fn id(&self) -> usize { self.1 }
+}
+
+impl<'a, V, E> IEdge<V, E> for IDiEdge<'a, E> where V: Vertex, E: Edge<VType=V> + 'a {
+    fn from(&self) -> &E::VType { self.0.from() }
+    fn to(&self) -> &E::VType { self.0.to() }
+    fn edge(&self) -> &E { self.0 }
+}
+
+pub struct AdjIter<'a, E: Edge + 'a> {
+    iter: std::slice::Iter<'a, Eite>,
+    edges: &'a Vec<E>,
+}
+
+impl<'a, E: Edge + 'a> std::iter::Iterator for AdjIter<'a, E> {
+    type Item = IDiEdge<'a, E>;
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.iter.next() {
+            Some(ei) => {
+                Some( IDiEdge(&self.edges[ei.0], ei.0) )
+            }
+            None => {
+                None
+            }
+        }
+    }
+}
+
 pub struct DirectedGraph<V: Vertex, E: Edge<VType=V>> {
     n: usize,
     m: usize,
     g: Vec<Vec<Eite>>,
-    es: Vec<IEdge<E>>,
+    es: Vec<E>,
 }
 
-impl<'a, V, E> Graph<'a,V,E> for DirectedGraph<V,E> where V: Vertex, E: Edge<VType=V> + 'a {
+impl<'a, V, E> Graph<'a,V,E,IDiEdge<'a, E>> for DirectedGraph<V,E> where V: Vertex, E: Edge<VType=V> + 'a {
     type EIter = AdjIter<'a, E>;
     fn add_edge(&mut self, e: E) {
         let ei = Eite(self.m);
         self.m += 1;
         self.g[e.from().id()].push(ei);
-        self.es.push(IEdge(e, ei.0));
+        self.es.push(e);
     }
     fn delta(&'a self, v: &V) -> Self::EIter {
         AdjIter { iter: self.g[v.id()].iter(), edges: &self.es }

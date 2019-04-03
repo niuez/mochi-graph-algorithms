@@ -15,13 +15,13 @@ impl Zero for i16 { fn zero() -> Self { 0 } }
 impl Zero for i32 { fn zero() -> Self { 0 } }
 impl Zero for i64 { fn zero() -> Self { 0 } }
 
-pub trait Property: Copy + Zero {}
+pub trait Property: Copy {}
 
-impl<P> Property for P where P: Copy + Zero {}
+impl<P> Property for P where P: Copy {}
 
-pub trait Weight: Property + std::ops::Add<Output=Self> + std::cmp::Ord {}
+pub trait Weight: Property + std::ops::Add<Output=Self> + std::cmp::Ord + Zero {}
 
-impl<W> Weight for W where W: Property + std::ops::Add<Output=W> + std::cmp::Ord {}
+impl<W> Weight for W where W: Property + std::ops::Add<Output=W> + std::cmp::Ord + Zero {}
 
 pub trait NNWeight: Weight {}
 

@@ -4,52 +4,45 @@ use third::property::*;
 use std::collections::BinaryHeap;
 use std::cmp::Ordering;
 
-struct DijkstraNode<W: NNWeight, V: Vertex> {
-    dist: Option<W>,
+struct DijkstraNode<W: NNegWeight, V: Vertex> {
+    dist: W,
     ver : V,
 }
 
-impl<W: NNWeight, V: Vertex> Ord for DijkstraNode<W, V> {
+impl<W: NNegWeight, V: Vertex> Ord for DijkstraNode<W, V> {
     fn cmp(&self, other: &Self) -> Ordering {
         other.dist.cmp(&self.dist)
     }
 }
-impl<W: NNWeight, V: Vertex> PartialOrd for DijkstraNode<W, V> {
+impl<W: NNegWeight, V: Vertex> PartialOrd for DijkstraNode<W, V> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(other.dist.cmp(&self.dist))
     }
 }
-impl<W: NNWeight, V: Vertex> PartialEq for DijkstraNode<W, V> {
+impl<W: NNegWeight, V: Vertex> PartialEq for DijkstraNode<W, V> {
     fn eq(&self, other: &Self) -> bool {
         self.dist == other.dist
     }
 }
 
-impl<W: NNWeight, V: Vertex> Eq for DijkstraNode<W, V> { }
+impl<W: NNegWeight, V: Vertex> Eq for DijkstraNode<W, V> { }
 
 
-pub fn dijkstra<'a, V, E, AE, G, W, F>(g: &'a G, s: &V, cost: F) -> Properties<Option<W>>
-where V: Vertex, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Graph<'a, V, E, AE>, W: NNWeight, F: Fn(&E) -> W { 
+pub fn dijkstra<'a, V, E, AE, G, W, F>(g: &'a G, s: &V, cost: F) -> Properties<W>
+where V: Vertex, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Graph<'a, V, E, AE>, W: NNegWeight, F: Fn(&E) -> W { 
 
     let n = g.v_size();
-    let mut dist = Properties::new(n, &None);
-    dist[s] = Some(W::zero());
+    let mut dist = Properties::new(n, &W::inf());
+    dist[s] = W::zero();
 
     let mut heap = BinaryHeap::new();
     heap.push(DijkstraNode { dist: dist[s], ver: s.clone() });
 
-    while let Some(DijkstraNode { dist: Some(d), ver: v}) = heap.pop() {
-        if let Some(now) = dist[&v] {
-            if now < d { continue }
-        }
+    while let Some(DijkstraNode { dist: d, ver: v}) = heap.pop() {
+        if dist[&v] < d { continue }
         for e in g.delta(&v) {
-            if match dist[e.to()] {
-                Some(d2) => { 
-                    cost(e.edge()) + d < d2
-                }
-                None => true
-            } {
-                dist[e.to()] = Some(cost(e.edge()) + d);
+            if dist[e.from()] + cost(e.edge()) < dist[e.to()] {
+                dist[e.to()] = dist[e.from()] + cost(e.edge());
                 heap.push(DijkstraNode{ dist: dist[e.to()], ver: e.to().clone() })
             }
         }
@@ -74,11 +67,11 @@ mod dijkstra_test {
         g.add_edge((3, 1, 1));
         g.add_edge((3, 2, 5));
 
-        let dist = dijkstra(&g, &1, |e| e.2);
-        assert!(dist[&0] == Some(3));
-        assert!(dist[&1] == Some(0));
-        assert!(dist[&2] == Some(2));
-        assert!(dist[&3] == None);
+        let dist = dijkstra(&g, &1, |e| NNegW::Some(e.2 as usize));
+        assert!(dist[&0] == NNegW::Some(3));
+        assert!(dist[&1] == NNegW::Some(0));
+        assert!(dist[&2] == NNegW::Some(2));
+        assert!(dist[&3] == NNegW::Inf);
     }
 }
 

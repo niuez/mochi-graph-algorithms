@@ -80,14 +80,6 @@ impl<'a, V, E> Graph<'a,V,E,DiAdjEdge<'a, E>> for DirectedGraph<V,E> where V: Ve
     type AdjIter = AdjIter<'a, E>;
     type EIter = EIter<'a, E>;
     type VIter = VIter<'a, V>;
-    fn add_edge(&mut self, e: E) {
-        let ei = Eite(self.m);
-        self.m += 1;
-        self.g[e.from().id()].push(ei);
-        self.vertex_regist(e.from().clone());
-        self.vertex_regist(e.to().clone());
-        self.es.push(e);
-    }
     fn delta(&'a self, v: &V) -> Self::AdjIter {
         AdjIter { iter: self.g[v.id()].iter(), edges: &self.es }
     }
@@ -127,6 +119,15 @@ impl<V: Vertex, E: Edge<VType=V>> DirectedGraph<V,E> {
                 Some(v)
             }
         }
+    }
+
+    pub fn add_edge(&mut self, e: E) {
+        let ei = Eite(self.m);
+        self.m += 1;
+        self.g[e.from().id()].push(ei);
+        self.vertex_regist(e.from().clone());
+        self.vertex_regist(e.to().clone());
+        self.es.push(e);
     }
 }
 

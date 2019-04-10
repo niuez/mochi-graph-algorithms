@@ -39,7 +39,6 @@ pub trait Graph<'a, V, E, AE> where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: A
     type AdjIter: std::iter::Iterator<Item=AE>;
     type EIter: std::iter::Iterator<Item=AE>;
     type VIter: std::iter::Iterator<Item=V>;
-    fn add_edge(&mut self, e: E);
     fn delta(&'a self, v: &V) -> Self::AdjIter;
     fn edges(&'a self) -> Self::EIter;
     fn vertices(&'a self) -> Self::VIter;

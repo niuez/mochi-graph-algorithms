@@ -29,7 +29,7 @@ impl<W: NNegWeight, V: Vertex> Eq for DijkstraNode<W, V> { }
 
 
 pub fn dijkstra<'a, V, E, AE, G, W, F>(g: &'a G, s: &V, cost: F) -> Properties<W>
-where V: Vertex, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Graph<'a, V, E, AE>, W: NNegWeight, F: Fn(&E) -> W { 
+where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Graph<'a, V, E, AE>, W: NNegWeight, F: Fn(&E) -> W { 
 
     let n = g.v_size();
     let mut dist = Properties::new(n, &W::inf());

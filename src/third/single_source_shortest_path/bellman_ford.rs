@@ -3,7 +3,7 @@ use third::property::*;
 
 
 pub fn bellman_ford<'a, V, E, AE, G, W, F>(g: &'a G, s: &V, cost: F) -> Properties<W>
-where V: Vertex, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Directed<'a, V, E, AE>, W: ArbWeight, F: Fn(&E) -> W {
+where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Directed<'a, V, E, AE>, W: ArbWeight, F: Fn(&E) -> W {
     let n = g.v_size();
     let mut dist = Properties::new(n, &W::inf());
     dist[s] = W::zero();

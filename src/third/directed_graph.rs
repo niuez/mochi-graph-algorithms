@@ -53,20 +53,39 @@ impl<'a, E: Edge + 'a> std::iter::Iterator for EIter<'a, E> {
     }
 }
 
+pub struct VIter<'a, V: Vertex + 'a> {
+    iter: std::slice:: Iter<'a, Option<V>>,
+}
+
+impl<'a, V: Vertex + 'a> std::iter::Iterator for VIter<'a, V> {
+    type Item = V;
+    fn next(&mut self) -> Option<Self::Item> {
+        while let Some(v) = self.iter.next() {
+            if v.is_none() { continue; }
+            else { return v.clone(); }
+        }
+        None
+    }
+}
+
 pub struct DirectedGraph<V: Vertex, E: Edge<VType=V>> {
     n: usize,
     m: usize,
     g: Vec<Vec<Eite>>,
     es: Vec<E>,
+    vs: Vec<Option<V>>, 
 }
 
-impl<'a, V, E> Graph<'a,V,E,DiAdjEdge<'a, E>> for DirectedGraph<V,E> where V: Vertex, E: Edge<VType=V> + 'a {
+impl<'a, V, E> Graph<'a,V,E,DiAdjEdge<'a, E>> for DirectedGraph<V,E> where V: Vertex + 'a, E: Edge<VType=V> + 'a {
     type AdjIter = AdjIter<'a, E>;
     type EIter = EIter<'a, E>;
+    type VIter = VIter<'a, V>;
     fn add_edge(&mut self, e: E) {
         let ei = Eite(self.m);
         self.m += 1;
         self.g[e.from().id()].push(ei);
+        self.vertex_regist(e.from().clone());
+        self.vertex_regist(e.to().clone());
         self.es.push(e);
     }
     fn delta(&'a self, v: &V) -> Self::AdjIter {
@@ -74,6 +93,9 @@ impl<'a, V, E> Graph<'a,V,E,DiAdjEdge<'a, E>> for DirectedGraph<V,E> where V: Ve
     }
     fn edges(&'a self) -> Self::EIter {
         EIter { i: 0, iter: self.es.iter() }
+    }
+    fn vertices(&'a self) -> Self::VIter { 
+        VIter { iter: self.vs.iter() }
     }
     fn v_size(&self) -> usize {
         self.n
@@ -90,11 +112,25 @@ impl<V: Vertex, E: Edge<VType=V>> DirectedGraph<V,E> {
             m: 0,
             g: vec![Vec::<Eite>::new(); n],
             es: Vec::new(),
+            vs: vec![None; n], 
+        }
+    }
+
+    fn vertex_regist(&mut self, v: V) {
+        let i = v.id();
+        self.vs[i] = match self.vs[v.id()].take() {
+            Some(vv) => {
+                assert!(vv.id() == v.id());
+                Some(vv)
+            }
+            None => {
+                Some(v)
+            }
         }
     }
 }
 
-impl<'a, V, E> Directed<'a, V, E, DiAdjEdge<'a, E>> for DirectedGraph<V, E> where V: Vertex, E: Edge<VType=V> + 'a {}
+impl<'a, V, E> Directed<'a, V, E, DiAdjEdge<'a, E>> for DirectedGraph<V, E> where V: Vertex + 'a, E: Edge<VType=V> + 'a {}
 
 #[test]
 fn digraph_test() {

@@ -4,7 +4,7 @@ use third::property::*;
 use std::collections::vec_deque::*;
 
 pub fn dial<'a, V, E, AE, G, F>(g: &'a G, s: &V, cost: F) -> Properties<NNegW<usize>>
-where V: Vertex, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Graph<'a, V, E, AE>, F: Fn(&E) -> NNegW<usize> { 
+where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Graph<'a, V, E, AE>, F: Fn(&E) -> NNegW<usize> { 
     type W = NNegW<usize>;
     let n = g.v_size();
     let mut dist = Properties::new(n, &W::inf());

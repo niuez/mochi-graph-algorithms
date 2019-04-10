@@ -128,6 +128,32 @@ impl<W> std::cmp::Ord for ArbW<W> where W: Zero + std::ops::Add<Output=W> + std:
     }
 }
 
+impl std::ops::Shl for ArbW<usize> {
+    type Output = Self;
+    fn shl(self, rhs: Self) -> Self {
+        match rhs {
+            ArbW::Some(r) => match self {
+                ArbW::Some(d) => ArbW::Some(d.shl(r)), 
+                other => other, 
+            }
+            _ => unreachable!(), 
+        }
+    }
+}
+
+impl std::ops::Shr for ArbW<usize> {
+    type Output = Self;
+    fn shr(self, rhs: Self) -> Self {
+        match rhs {
+            ArbW::Some(r) => match self {
+                ArbW::Some(d) => ArbW::Some(d.shr(r)), 
+                other => other, 
+            }
+            _ => unreachable!(), 
+        }
+    }
+}
+
 
 impl<W> ArbWeight for ArbW<W> where W: Zero + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
     fn zero() -> Self { ArbW::Some(W::zero()) }
@@ -201,6 +227,32 @@ impl<W> std::cmp::Ord for NNegW<W> where W: Zero + IsNN + std::ops::Add<Output=W
                     NNegW::Some(d2) => d.cmp(d2), 
                 }
             }
+        }
+    }
+}
+
+impl std::ops::Shl for NNegW<usize> {
+    type Output = Self;
+    fn shl(self, rhs: Self) -> Self {
+        match rhs {
+            NNegW::Some(r) => match self {
+                NNegW::Some(d) => NNegW::Some(d.shl(r)), 
+                other => other, 
+            }
+            _ => unreachable!(), 
+        }
+    }
+}
+
+impl std::ops::Shr for NNegW<usize> {
+    type Output = Self;
+    fn shr(self, rhs: Self) -> Self {
+        match rhs {
+            NNegW::Some(r) => match self {
+                NNegW::Some(d) => NNegW::Some(d.shr(r)), 
+                other => other, 
+            }
+            _ => unreachable!(), 
         }
     }
 }

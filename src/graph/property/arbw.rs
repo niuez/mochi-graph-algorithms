@@ -1,4 +1,4 @@
-use third::property::{ Zero, ArbWeight };
+use graph::property::{ Zero, ArbWeight };
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum ArbW<W> where W: Zero + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {

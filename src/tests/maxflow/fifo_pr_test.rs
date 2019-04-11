@@ -1,10 +1,10 @@
 extern crate rand;
 
-use graph::*;
-use graph::directed_graph::*;
-use graph::maxflow::*;
-use graph::maxflow::fifo_push_relabel::*;
-use graph::maxflow::dinic::*;
+use second::*;
+use second::directed_graph::*;
+use second::maxflow::*;
+use second::maxflow::fifo_push_relabel::*;
+use second::maxflow::dinic::*;
 
 use self::rand::Rng;
 

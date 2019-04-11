@@ -1,74 +1,51 @@
 pub mod property;
 pub mod directed_graph;
 pub mod undirected_graph;
-pub mod bipartite_directed_graph;
-pub mod bipartite_undirected_graph;
 
 pub mod single_source_shortest_path;
-pub mod maxflow;
-pub mod cardinality_bipartite_maching;
-pub mod cardinality_nonbipartite_matching;
 pub mod all_pairs_shortest_path;
 
 use graph::property::*;
 
-#[derive(Clone,Copy,Eq,PartialEq,Debug)]
-pub struct Vite(pub usize);
 
-#[derive(Clone,Copy,Eq,PartialEq,Debug)]
-pub struct Eite(pub usize);
+pub trait Vertex: ID + Clone { }
+
+impl<V: ID + Clone> Vertex for V { }
 
 pub trait Edge {
-    fn from(&self) -> Vite;
-    fn to(&self) -> Vite;
+    type VType: Vertex;
+    fn from(&self) -> &Self::VType;
+    fn to(&self) -> &Self::VType;
 }
 
-pub trait Vertex {
-    fn new(id : usize) -> Self;
-    fn id(&self) -> usize;
+impl<V> Edge for (V, V) where V: Vertex { 
+    type VType = V;
+    fn from(&self) -> &Self::VType { &self.0 }
+    fn to(&self) -> &Self::VType { &self.1 }
 }
 
-impl Vertex for usize {
-    fn new(id: usize) -> Self { id }
-    fn id(&self) -> usize { *self }
+impl<V, P> Edge for (V, V, P) where V: Vertex, P: Property { 
+    type VType = V;
+    fn from(&self) -> &Self::VType { &self.0 }
+    fn to(&self) -> &Self::VType { &self.1 }
 }
 
-impl Edge for (usize,usize) { 
-    fn from(&self) -> Vite { Vite(self.0) }
-    fn to(&self) -> Vite { Vite(self.1) }
+pub trait AdjEdge<V, E>: ID where V: Vertex, E: Edge<VType=V> {
+    fn from(&self) -> &V;
+    fn to(&self) -> &V;
+    fn edge(&self) -> &E;
 }
 
-impl<P> Edge for (usize,usize,P) where P: Property { 
-    fn from(&self) -> Vite { Vite(self.0) }
-    fn to(&self) -> Vite { Vite(self.1) }
-}
-
-pub trait Graph<'a, V: Vertex, E: Edge> {
-    type EsIter: std::iter::Iterator<Item=&'a Eite>;
-    fn add_edge(&mut self, e: E);
-    fn delta(&'a self, v: &Vite) -> Self::EsIter;
-    fn edge(&self, e: &Eite) -> &E;
-    fn vertex(&self, v: &Vite) -> &V;
+pub trait Graph<'a, V, E, AE> where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E> {
+    type AdjIter: std::iter::Iterator<Item=AE>;
+    type EIter: std::iter::Iterator<Item=AE>;
+    type VIter: std::iter::Iterator<Item=&'a V>;
+    fn delta(&'a self, v: &V) -> Self::AdjIter;
+    fn edges(&'a self) -> Self::EIter;
+    fn vertices(&'a self) -> Self::VIter;
     fn v_size(&self) -> usize;
     fn e_size(&self) -> usize;
 }
 
-pub fn from<E: Edge>(f: Vite, e: &E) -> Vite {
-    if e.from() == f { e.from() }
-    else { e.to() }
-}
-
-pub fn to<E: Edge>(f: Vite, e: &E) -> Vite {
-    if e.from() == f { e.to() }
-    else { e.from() }
-}
-
-pub trait Directed<'a,V: Vertex, E: Edge>: Graph<'a,V,E> {  }
-pub trait Undirected<'a,V: Vertex, E: Edge>: Graph<'a,V,E> {  }
-pub trait Bipartite<'a,V: Vertex, E: Edge>: Graph<'a,V,E> { 
-    fn left_size(&self) -> usize;
-    fn right_size(&self) -> usize;
-    fn left_vs(&self) -> std::slice::Iter<Vite>;
-    fn right_vs(&self) -> std::slice::Iter<Vite>;
-}
-
+pub trait Directed<'a, V, E, AE>: Graph<'a, V, E, AE> where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E> {}
+pub trait Undirected<'a, V, E, AE>: Graph<'a, V, E, AE> where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E> {}

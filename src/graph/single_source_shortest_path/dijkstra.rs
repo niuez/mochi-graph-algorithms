@@ -4,60 +4,73 @@ use graph::property::*;
 use std::collections::BinaryHeap;
 use std::cmp::Ordering;
 
-#[derive(Eq)]
-struct DijkstraNode<W: NonNegativeWeighted> {
-    dist: Option<W>,
-    ver : Vite,
+struct DijkstraNode<W: NNegWeight, V: Vertex> {
+    dist: W,
+    ver : V,
 }
 
-impl<W: NonNegativeWeighted> Ord for DijkstraNode<W> {
+impl<W: NNegWeight, V: Vertex> Ord for DijkstraNode<W, V> {
     fn cmp(&self, other: &Self) -> Ordering {
         other.dist.cmp(&self.dist)
     }
 }
-impl<W: NonNegativeWeighted> PartialOrd for DijkstraNode<W> {
+impl<W: NNegWeight, V: Vertex> PartialOrd for DijkstraNode<W, V> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(other.dist.cmp(&self.dist))
     }
 }
-impl<W: NonNegativeWeighted> PartialEq for DijkstraNode<W> {
+impl<W: NNegWeight, V: Vertex> PartialEq for DijkstraNode<W, V> {
     fn eq(&self, other: &Self) -> bool {
         self.dist == other.dist
     }
 }
 
-pub fn dijkstra_s3p<'a,V,E,G,W,F>(g: &'a G, s: Vite,fp: F) -> Vec<Option<W>>
-where V: Vertex , E: Edge,G: Graph<'a,V,E>, W: NonNegativeWeighted , F: Fn(&E) -> W {
+impl<W: NNegWeight, V: Vertex> Eq for DijkstraNode<W, V> { }
+
+
+pub fn dijkstra<'a, V, E, AE, G, W, F>(g: &'a G, s: &V, cost: F) -> Properties<W>
+where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Graph<'a, V, E, AE>, W: NNegWeight, F: Fn(&E) -> W { 
+
     let n = g.v_size();
-    let mut dist = vec![None ; n];
-    dist[s.0] = Some(W::zero());
-    
+    let mut dist = Properties::new(n, &W::inf());
+    dist[s] = W::zero();
+
     let mut heap = BinaryHeap::new();
+    heap.push(DijkstraNode { dist: dist[s], ver: s.clone() });
 
-    heap.push(DijkstraNode::<W>{ dist : dist[s.0] , ver : s});
-
-    loop{
-        if let Some(DijkstraNode::<W>{dist : Some(d) , ver : v}) = heap.pop() {
-            if let Some(now) = dist[v.0] {
-                if now < d { continue }
-            }
-            for ei in g.delta(&v) {
-                let e = g.edge(ei);
-                let to = to(v,e);
-                if match dist[to.0] {
-                    Some(d2) => {
-                        if fp(e) + d < d2 { true }
-                        else { false }
-                    }
-                    None => true
-                } {
-                    dist[to.0] = Some(fp(e) + d);
-                    heap.push(DijkstraNode::<W>{ dist: dist[to.0] , ver : to.clone() });
-                }
+    while let Some(DijkstraNode { dist: d, ver: v}) = heap.pop() {
+        if dist[&v] < d { continue }
+        for e in g.delta(&v) {
+            if dist[e.from()] + cost(e.edge()) < dist[e.to()] {
+                dist[e.to()] = dist[e.from()] + cost(e.edge());
+                heap.push(DijkstraNode{ dist: dist[e.to()], ver: e.to().clone() })
             }
         }
-        else { break }
     }
 
     dist
 }
+
+#[cfg(test)]
+mod dijkstra_test {
+    use graph::directed_graph::*;
+    use graph::single_source_shortest_path::dijkstra::*;
+
+    #[test]
+    fn dijkstra_test() {
+        let mut g = DirectedGraph::new(4);
+        g.add_edge((0, 1, 1));
+        g.add_edge((0, 2, 4));
+        g.add_edge((2, 0, 1));
+        g.add_edge((1, 2, 2));
+        g.add_edge((3, 1, 1));
+        g.add_edge((3, 2, 5));
+
+        let dist = dijkstra(&g, &1, |e| NNegW::Some(e.2 as usize));
+        assert!(dist[&0] == NNegW::Some(3));
+        assert!(dist[&1] == NNegW::Some(0));
+        assert!(dist[&2] == NNegW::Some(2));
+        assert!(dist[&3] == NNegW::Inf);
+    }
+}
+

@@ -1,5 +1,5 @@
-use third::*;
-use third::property::*;
+use graph::*;
+use graph::property::*;
 
 
 pub fn feasible_potential<'a, V, E, AE, G, W, F>(g: &'a G, s: &V, cost: F) -> Option<Properties<W>>

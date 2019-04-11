@@ -1,7 +1,7 @@
-use graph::*;
-use graph::property::*;
-use graph::maxflow::*;
-use graph::directed_graph::*;
+use second::*;
+use second::property::*;
+use second::maxflow::*;
+use second::directed_graph::*;
 
 use std::cmp::min;
 

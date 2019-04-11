@@ -1,4 +1,4 @@
-use third::property::{ Zero, IsNN, ArbWeight, NNegWeight };
+use graph::property::{ Zero, IsNN, ArbWeight, NNegWeight };
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum NNegW<W> where W: Zero + IsNN + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {

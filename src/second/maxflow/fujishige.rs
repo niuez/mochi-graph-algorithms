@@ -1,6 +1,6 @@
-use graph::*;
-use graph::property::*;
-use graph::maxflow::*;
+use second::*;
+use second::property::*;
+use second::maxflow::*;
 
 use std::cmp::min;
 use std::cmp::max;

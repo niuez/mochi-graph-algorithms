@@ -1,10 +1,10 @@
 extern crate rand;
 
-use graph::*;
-use graph::directed_graph::*;
-use graph::maxflow::*;
-use graph::maxflow::ford_fulkerson::*;
-use graph::maxflow::dinic::*;
+use second::*;
+use second::directed_graph::*;
+use second::maxflow::*;
+use second::maxflow::ford_fulkerson::*;
+use second::maxflow::dinic::*;
 
 use self::rand::Rng;
 

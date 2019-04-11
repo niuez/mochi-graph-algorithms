@@ -23,7 +23,7 @@ where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Graph<'a, V, 
     for k in (0..logw+1).rev() {
 
         for v in g.vertices() {
-            dist[&v] = dist[&v] << NNegW::Some(1);
+            dist[v] = dist[v] << NNegW::Some(1);
         }
 
         let mut temp = Properties::new(n, &W::inf());
@@ -45,7 +45,7 @@ where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Graph<'a, V, 
         }
 
         for v in g.vertices() {
-            dist[&v] = dist[&v] + temp[&v];
+            dist[v] = dist[v] + temp[v];
         }
     }
 
@@ -54,7 +54,6 @@ where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Graph<'a, V, 
 
 #[cfg(test)]
 mod scaling_dijkstra_test {
-    use third::*;
     use third::directed_graph::*;
     use third::single_source_shortest_path::scaling_dijkstra::*;
 

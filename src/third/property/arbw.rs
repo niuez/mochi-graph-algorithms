@@ -74,7 +74,7 @@ impl<W> std::cmp::Ord for ArbW<W> where W: Zero + std::ops::Add<Output=W> + std:
         match self {
             ArbW::Inf => {
                 match rhs {
-                    ArbW::Inf => unreachable!(),
+                    ArbW::Inf => std::cmp::Ordering::Equal,
                     _ => std::cmp::Ordering::Greater,
                 }
             }
@@ -87,7 +87,7 @@ impl<W> std::cmp::Ord for ArbW<W> where W: Zero + std::ops::Add<Output=W> + std:
             }
             ArbW::NegInf => {
                 match rhs {
-                    ArbW::NegInf => unreachable!(),
+                    ArbW::NegInf => std::cmp::Ordering::Equal,
                     _ => std::cmp::Ordering::Less, 
                 }
             }

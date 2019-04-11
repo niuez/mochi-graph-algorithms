@@ -58,11 +58,11 @@ pub struct VIter<'a, V: Vertex + 'a> {
 }
 
 impl<'a, V: Vertex + 'a> std::iter::Iterator for VIter<'a, V> {
-    type Item = V;
+    type Item = &'a V;
     fn next(&mut self) -> Option<Self::Item> {
         while let Some(v) = self.iter.next() {
             if v.is_none() { continue; }
-            else { return v.clone(); }
+            else { return v.as_ref() }
         }
         None
     }

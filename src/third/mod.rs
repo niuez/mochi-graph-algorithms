@@ -3,6 +3,7 @@ pub mod directed_graph;
 pub mod undirected_graph;
 
 pub mod single_source_shortest_path;
+pub mod all_pairs_shortest_path;
 
 use third::property::*;
 
@@ -38,7 +39,7 @@ pub trait AdjEdge<V, E>: ID where V: Vertex, E: Edge<VType=V> {
 pub trait Graph<'a, V, E, AE> where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E> {
     type AdjIter: std::iter::Iterator<Item=AE>;
     type EIter: std::iter::Iterator<Item=AE>;
-    type VIter: std::iter::Iterator<Item=V>;
+    type VIter: std::iter::Iterator<Item=&'a V>;
     fn delta(&'a self, v: &V) -> Self::AdjIter;
     fn edges(&'a self) -> Self::EIter;
     fn vertices(&'a self) -> Self::VIter;

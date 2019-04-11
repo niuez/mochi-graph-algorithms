@@ -53,7 +53,6 @@ where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Graph<'a, V, 
 
 #[cfg(test)]
 mod dijkstra_test {
-    use third::*;
     use third::directed_graph::*;
     use third::single_source_shortest_path::dijkstra::*;
 

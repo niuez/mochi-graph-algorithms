@@ -56,7 +56,7 @@ impl<W> std::cmp::Ord for NNegW<W> where W: Zero + IsNN + std::ops::Add<Output=W
         match self {
             NNegW::Inf => {
                 match rhs {
-                    NNegW::Inf => unreachable!(),
+                    NNegW::Inf => std::cmp::Ordering::Equal, 
                     _ => std::cmp::Ordering::Greater,
                 }
             }

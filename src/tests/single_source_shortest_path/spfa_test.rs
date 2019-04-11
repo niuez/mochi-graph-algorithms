@@ -1,9 +1,9 @@
 extern crate rand;
 
-use graph::*;
-use graph::directed_graph::*;
-use graph::single_source_shortest_path::dijkstra::*;
-use graph::single_source_shortest_path::spfa::*;
+use second::*;
+use second::directed_graph::*;
+use second::single_source_shortest_path::dijkstra::*;
+use second::single_source_shortest_path::spfa::*;
 
 use self::rand::Rng;
 

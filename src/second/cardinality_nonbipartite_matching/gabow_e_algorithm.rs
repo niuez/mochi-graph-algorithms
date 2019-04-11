@@ -1,5 +1,5 @@
-use graph::*;
-use graph::undirected_graph::*;
+use second::*;
+use second::undirected_graph::*;
 
 use std::collections::VecDeque;
 

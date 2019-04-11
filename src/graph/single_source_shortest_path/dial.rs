@@ -1,36 +1,61 @@
 use graph::*;
 use graph::property::*;
-use std::cmp::max;
 
-pub fn dial_s3p<'a,V,E,G,F>(g: &'a G, s: Vite,fp: F) -> Vec<Option<usize>>
-where V: Vertex, E: Edge, G: Graph<'a,V,E>, F: Fn(&E) -> usize {
+use std::collections::vec_deque::*;
+
+pub fn dial<'a, V, E, AE, G, F>(g: &'a G, s: &V, cost: F) -> Properties<NNegW<usize>>
+where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Graph<'a, V, E, AE>, F: Fn(&E) -> NNegW<usize> { 
+    type W = NNegW<usize>;
     let n = g.v_size();
-    let mut mv = usize::zero();
-    let mut dist = vec![None;n];
-    for i in 0..n {
-        for e in g.delta(&Vite(i)) {
-            mv = max(mv, fp(g.edge(e)));
-        }
+    let mut dist = Properties::new(n, &W::inf());
+    dist[s] = W::zero();
+    let mut mw = W::zero();
+    for e in g.edges() { 
+        if mw < cost(e.edge()) { mw = cost(e.edge()); }
     }
 
-    let mut pack = vec![Vec::<Vite>::new();mv * n + 1];
-    dist[s.0] = Some(usize::zero());
-    pack[dist[s.0].unwrap()].push(s);
+    let mut que = match mw {
+         NNegW::Some(d) => vec![VecDeque::new(); d + 1], 
+         _ => unimplemented!()
+    };
+    que[0].push_back((s.clone(), NNegW::Some(0usize)));
 
-    for d in 0..pack.len() {
-        while let Some(v) = pack[d].pop() {
-            if dist[v.0].unwrap() < d { continue; }
-            for ei in g.delta(&v) {
-                let e = g.edge(ei);
-                let to = to(v, e);
-                if dist[to.0] == None || dist[to.0].unwrap() > d + fp(e) {
-                    dist[to.0] = Some(d + fp(e));
-                    pack[dist[to.0].unwrap()].push(to);
+    let len = que.len();
+    for dd in 0..len * n {
+        while let Some((v, d)) = que[dd % len].pop_back() {
+            if dist[&v] < d { continue }
+            for e in g.delta(&v) { 
+                if dist[e.from()] + cost(e.edge()) < dist[e.to()] {
+                    dist[e.to()] = dist[e.from()] + cost(e.edge());
+                    que[ match dist[e.to()] { NNegW::Some(dt) => dt, _ => unreachable!() } ].push_back((e.to().clone(), dist[e.to()]));
                 }
             }
         }
     }
-
     dist
+    
+}
+
+#[cfg(test)]
+mod dial_test {
+    use graph::directed_graph::*;
+    use graph::single_source_shortest_path::dial::*;
+
+    #[test]
+    fn dial_test() {
+        let mut g = DirectedGraph::new(4);
+        g.add_edge((0, 1, 1));
+        g.add_edge((0, 2, 4));
+        g.add_edge((2, 0, 1));
+        g.add_edge((1, 2, 2));
+        g.add_edge((3, 1, 1));
+        g.add_edge((3, 2, 5));
+
+        let dist = dial(&g, &1, |e| NNegW::Some(e.2 as usize));
+        assert!(dist[&0] == NNegW::Some(3));
+        assert!(dist[&1] == NNegW::Some(0));
+        assert!(dist[&2] == NNegW::Some(2));
+        assert!(dist[&3] == NNegW::Inf);
+    }
 }
 

@@ -3,9 +3,9 @@ pub mod fifo_push_relabel;
 pub mod ford_fulkerson;
 pub mod fujishige;
 
-use graph::*;
-use graph::directed_graph::*;
-use graph::property::*;
+use second::*;
+use second::directed_graph::*;
+use second::property::*;
 
 pub struct MFlowV {
     pub i: usize

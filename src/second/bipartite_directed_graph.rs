@@ -1,6 +1,6 @@
-use graph::*;
+use second::*;
 
-pub struct BipartiteUndirectedGraph<V: Vertex, E: Edge> {
+pub struct BipartiteDirectedGraph<V: Vertex, E: Edge> {
     le: usize,
     ri: usize,
     m: usize,
@@ -11,7 +11,7 @@ pub struct BipartiteUndirectedGraph<V: Vertex, E: Edge> {
     rs: Vec<Vite>
 }
 
-impl<'a, V: Vertex, E: Edge> Graph<'a,V,E> for BipartiteUndirectedGraph<V,E> {
+impl<'a, V: Vertex, E: Edge> Graph<'a,V,E> for BipartiteDirectedGraph<V,E> {
     type EsIter = std::slice::Iter<'a,Eite>;
     fn add_edge(&mut self, e: E) { 
         assert!(e.from().0 < self.le);
@@ -19,7 +19,6 @@ impl<'a, V: Vertex, E: Edge> Graph<'a,V,E> for BipartiteUndirectedGraph<V,E> {
         let ei = Eite(self.m);
         self.m += 1;
         self.g[e.from().0].push(ei);
-        self.g[e.to().0].push(ei);
         self.es.push(e);
     }
     fn delta(&'a self, v: &Vite) -> Self::EsIter {
@@ -39,17 +38,17 @@ impl<'a, V: Vertex, E: Edge> Graph<'a,V,E> for BipartiteUndirectedGraph<V,E> {
     }
 }
 
-impl<'a,V: Vertex, E: Edge> Undirected<'a,V,E> for BipartiteUndirectedGraph<V,E> {  }
-impl<'a,V: Vertex, E: Edge> Bipartite<'a,V,E> for BipartiteUndirectedGraph<V,E> { 
+impl<'a,V: Vertex, E: Edge> Directed<'a,V,E> for BipartiteDirectedGraph<V,E> {  }
+impl<'a,V: Vertex, E: Edge> Bipartite<'a,V,E> for BipartiteDirectedGraph<V,E> { 
     fn left_size(&self) -> usize { self.le }
     fn right_size(&self) -> usize { self.ri }
     fn left_vs(&self) -> std::slice::Iter<Vite> { self.ls.iter() }
     fn right_vs(&self) -> std::slice::Iter<Vite> { self.rs.iter() }
 }
 
-impl<V: Vertex, E: Edge> BipartiteUndirectedGraph<V,E> {
-     pub fn new(le: usize, ri: usize) -> BipartiteUndirectedGraph<V,E> { 
-         BipartiteUndirectedGraph { 
+impl<V: Vertex, E: Edge> BipartiteDirectedGraph<V,E> {
+     pub fn new(le: usize, ri: usize) -> BipartiteDirectedGraph<V,E> { 
+         BipartiteDirectedGraph { 
              le: le,
              ri: ri,
              m: 0,

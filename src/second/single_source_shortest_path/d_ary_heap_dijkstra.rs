@@ -1,5 +1,5 @@
-use graph::*;
-use graph::property::*;
+use second::*;
+use second::property::*;
 
 use std::cmp::Ordering;
 use std::cmp::min;

@@ -1,8 +1,8 @@
 use graph::*;
 use graph::property::*;
 
-pub fn warshall_floyd<'a,V,E,AE,G,W,F>(g: &'a G, cost: F) -> Option<Properties<Properties<W>>>
-where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Graph<'a, V, E, AE>, W: ArbWeight, F: Fn(&E) -> W {
+pub fn warshall_floyd<'a, G, W, F>(g: &'a G, cost: F) -> Option<Properties<Properties<W>>>
+where G: Graph<'a>, W: ArbWeight, F: Fn(&G::EType) -> W {
     let n = g.v_size();
     let mut dist = Properties::new(n, &Properties::new(n, &W::inf()));
 

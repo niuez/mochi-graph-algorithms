@@ -3,8 +3,8 @@ use graph::property::*;
 use graph::single_source_shortest_path::feasible_potential::*;
 use graph::single_source_shortest_path::dijkstra::*;
 
-pub fn dijkstra_with_potential<'a,V,E,AE,G,W,F>(g: &'a G, cost: F) -> Option<Properties<Properties<W>>>
-where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Directed<'a, V, E, AE>, W: ArbWeight, F: Fn(&E) -> W, <W as ToNNegWeight>::Output: ToArbWeight<Output=W> {
+pub fn dijkstra_with_potential<'a, G, W, F>(g: &'a G, cost: F) -> Option<Properties<Properties<W>>>
+where G: Directed<'a>, W: ArbWeight, F: Fn(&G::EType) -> W, <W as ToNNegWeight>::Output: ToArbWeight<Output=W> {
     let n = g.v_size();
 
     if let Some(pi) = feasible_potential(g, |e| cost(e)) {

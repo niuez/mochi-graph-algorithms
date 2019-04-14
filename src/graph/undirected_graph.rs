@@ -9,8 +9,9 @@ impl<'a, E: Edge + 'a> ID for UnAdjEdge<'a, E> {
     fn id(&self) -> usize { self.1 } 
 }
 
-impl<'a, V, E> AdjEdge<V, E> for UnAdjEdge<'a, E> 
-where V: Vertex, E: Edge<VType=V> + 'a {
+impl<'a, E> AdjEdge for UnAdjEdge<'a, E> where E: Edge + 'a {
+    type VType = E::VType;
+    type EType = E;
     fn from(&self) -> &E::VType { 
         match self.2 {
             true => self.0.from(),
@@ -82,7 +83,10 @@ pub struct UndirectedGraph<V: Vertex, E: Edge<VType=V>> {
     vs: Vec<Option<V>>, 
 }
 
-impl<'a, V, E> Graph<'a,V,E,UnAdjEdge<'a, E>> for UndirectedGraph<V,E> where V: Vertex + 'a, E: Edge<VType=V> + 'a {
+impl<'a, V, E> Graph<'a> for UndirectedGraph<V,E> where V: Vertex + 'a, E: Edge<VType=V> + 'a {
+    type VType = V;
+    type EType = E;
+    type AEType = UnAdjEdge<'a, E>;
     type AdjIter = AdjIter<'a, E>;
     type EIter = EIter<'a, E>;
     type VIter = VIter<'a, V>;
@@ -138,7 +142,7 @@ impl<V: Vertex, E: Edge<VType=V>> UndirectedGraph<V,E> {
     }
 }
 
-impl<'a, V, E> Undirected<'a, V, E, UnAdjEdge<'a, E>> for UndirectedGraph<V, E> where V: Vertex + 'a, E: Edge<VType=V> + 'a {}
+impl<'a, V, E> Undirected<'a> for UndirectedGraph<V, E> where V: Vertex + 'a, E: Edge<VType=V> + 'a {}
 
 #[test]
 fn undigraph_test() {

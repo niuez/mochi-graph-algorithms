@@ -9,7 +9,9 @@ impl<'a, E: Edge + 'a> ID for DiAdjEdge<'a, E> {
     fn id(&self) -> usize { self.1 }
 }
 
-impl<'a, V, E> AdjEdge<V, E> for DiAdjEdge<'a, E> where V: Vertex, E: Edge<VType=V> + 'a {
+impl<'a, E> AdjEdge for DiAdjEdge<'a, E> where E: Edge + 'a {
+    type VType = E::VType;
+    type EType = E;
     fn from(&self) -> &E::VType { self.0.from() }
     fn to(&self) -> &E::VType { self.0.to() }
     fn edge(&self) -> &E { self.0 }
@@ -76,7 +78,10 @@ pub struct DirectedGraph<V: Vertex, E: Edge<VType=V>> {
     vs: Vec<Option<V>>, 
 }
 
-impl<'a, V, E> Graph<'a,V,E,DiAdjEdge<'a, E>> for DirectedGraph<V,E> where V: Vertex + 'a, E: Edge<VType=V> + 'a {
+impl<'a, V, E> Graph<'a> for DirectedGraph<V,E> where V: Vertex + 'a, E: Edge<VType=V> + 'a {
+    type VType = V;
+    type EType = E;
+    type AEType = DiAdjEdge<'a, E>;
     type AdjIter = AdjIter<'a, E>;
     type EIter = EIter<'a, E>;
     type VIter = VIter<'a, V>;
@@ -131,7 +136,7 @@ impl<V: Vertex, E: Edge<VType=V>> DirectedGraph<V,E> {
     }
 }
 
-impl<'a, V, E> Directed<'a, V, E, DiAdjEdge<'a, E>> for DirectedGraph<V, E> where V: Vertex + 'a, E: Edge<VType=V> + 'a {}
+impl<'a, V, E> Directed<'a> for DirectedGraph<V, E> where V: Vertex + 'a, E: Edge<VType=V> + 'a {}
 
 #[test]
 fn digraph_test() {

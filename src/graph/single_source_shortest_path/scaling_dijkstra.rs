@@ -1,8 +1,8 @@
 use graph::*;
 use graph::property::*;
 
-pub fn scaling_dijkstra<'a, V, E, AE, G, F>(g: &'a G, s: &V, cost: F) -> Properties<NNegW<usize>>
-where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Graph<'a, V, E, AE>, F: Fn(&E) -> NNegW<usize> { 
+pub fn scaling_dijkstra<'a, G, F>(g: &'a G, s: &G::VType, cost: F) -> Properties<NNegW<usize>>
+where G: Graph<'a>, F: Fn(&G::EType) -> NNegW<usize> { 
     type W = NNegW<usize>;
     let n = g.v_size();
     let mut dist = Properties::new(n, &W::zero());

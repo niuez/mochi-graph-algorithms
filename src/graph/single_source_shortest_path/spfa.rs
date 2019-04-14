@@ -3,8 +3,8 @@ use graph::property::*;
 
 use std::collections::VecDeque;
 
-pub fn spfa<'a, V, E, AE, G, W, F>(g: &'a G, s: &V, cost: F) -> Option<Properties<W>>
-where V: Vertex + 'a, E: Edge<VType=V> + 'a, AE: AdjEdge<V, E>, G: Directed<'a, V, E, AE>, W: ArbWeight, F: Fn(&E) -> W {
+pub fn spfa<'a, G, W, F>(g: &'a G, s: &G::VType, cost: F) -> Option<Properties<W>>
+where G: Directed<'a>, W: ArbWeight, F: Fn(&G::EType) -> W {
     let n = g.v_size();
     let mut dist = Properties::new(n, &W::inf());
     let mut que = VecDeque::new();

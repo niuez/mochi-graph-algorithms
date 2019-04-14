@@ -1,13 +1,13 @@
-use graph::property::{ Zero, ArbWeight };
+use graph::property::{ Zero, ToNNeg, IsNum, ArbWeight, ToNNegWeight, ToArbWeight, NNegW };
 
 #[derive(Clone, Copy, PartialEq, Eq)]
-pub enum ArbW<W> where W: Zero + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
+pub enum ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
     Inf, 
     Some(W),
     NegInf,
 }
 
-impl<W> std::ops::Add for ArbW<W> where W: Zero + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
+impl<W> std::ops::Add for ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
     type Output = Self;
     fn add(self, rhs: Self) -> Self {
         match self {
@@ -35,7 +35,7 @@ impl<W> std::ops::Add for ArbW<W> where W: Zero + std::ops::Add<Output=W> + std:
 
 }
 
-impl<W> std::ops::Sub for ArbW<W> where W: Zero + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
+impl<W> std::ops::Sub for ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
     type Output = Self;
     fn sub(self, rhs: Self) -> Self {
         match self {
@@ -63,13 +63,13 @@ impl<W> std::ops::Sub for ArbW<W> where W: Zero + std::ops::Add<Output=W> + std:
 }
 
 
-impl<W> std::cmp::PartialOrd for ArbW<W> where W: Zero + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
+impl<W> std::cmp::PartialOrd for ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
     fn partial_cmp(&self, rhs: &Self) -> Option<std::cmp::Ordering> {
         Some(self.cmp(rhs))
     }
 }
 
-impl<W> std::cmp::Ord for ArbW<W> where W: Zero + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
+impl<W> std::cmp::Ord for ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
     fn cmp(&self, rhs: &Self) -> std::cmp::Ordering {
         match self {
             ArbW::Inf => {
@@ -92,6 +92,24 @@ impl<W> std::cmp::Ord for ArbW<W> where W: Zero + std::ops::Add<Output=W> + std:
                 }
             }
         }
+    }
+}
+
+impl<W> ToNNegWeight for ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
+    type Output = NNegW<<W as ToNNeg>::Output>;
+    fn to_nnegw(&self) -> Self::Output {
+        match self {
+            ArbW::Inf => NNegW::Inf,
+            ArbW::Some(ref num) => NNegW::Some(num.to_nneg()),
+            ArbW::NegInf => unreachable!(), 
+        }
+    }
+}
+
+impl<W> ToArbWeight for ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
+    type Output = Self;
+    fn to_arbw(&self) -> Self::Output {
+        self.clone()
     }
 }
 
@@ -122,8 +140,8 @@ impl std::ops::Shr for ArbW<usize> {
 }
 
 
-impl<W> ArbWeight for ArbW<W> where W: Zero + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
-    fn zero() -> Self { ArbW::Some(W::zero()) }
+impl<W> ArbWeight for ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
     fn inf() -> Self { ArbW::Inf }
+    fn zero() -> Self { ArbW::Some(W::zero()) }
     fn neg_inf() -> Self { ArbW::NegInf }
 }

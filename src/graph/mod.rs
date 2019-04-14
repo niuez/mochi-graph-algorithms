@@ -7,7 +7,6 @@ pub mod all_pairs_shortest_path;
 
 use graph::property::*;
 
-
 pub trait Vertex: ID + Clone { }
 
 impl<V: ID + Clone> Vertex for V { }

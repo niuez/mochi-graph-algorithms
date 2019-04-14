@@ -1,4 +1,5 @@
-use graph::property::{ Zero, ToNNeg, IsNum, ArbWeight, ToNNegWeight, ToArbWeight, NNegW };
+use graph::property::{ ArbWeight, ToNNegWeight, ToArbWeight, NNegW };
+use graph::property::literal::{ Zero, ToNNeg, IsNum };
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {

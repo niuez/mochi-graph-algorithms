@@ -1,6 +1,7 @@
 pub mod property;
 pub mod directed_graph;
 pub mod undirected_graph;
+pub mod bipartite_graph;
 
 pub mod single_source_shortest_path;
 pub mod all_pairs_shortest_path;
@@ -53,3 +54,8 @@ pub trait Graph<'a> {
 
 pub trait Directed<'a>: Graph<'a> {}
 pub trait Undirected<'a>: Graph<'a> {}
+pub trait Bipartite<'a>: Undirected<'a> {
+    type BVIter: std::iter::Iterator<Item=&'a Self::VType>;
+    fn left_vertices(&'a self) -> Self::BVIter;
+    fn right_vertices(&'a self) -> Self::BVIter;
+}

@@ -2,10 +2,12 @@ pub mod property;
 pub mod directed_graph;
 pub mod undirected_graph;
 pub mod bipartite_graph;
+pub mod residual_network;
 
 pub mod single_source_shortest_path;
 pub mod all_pairs_shortest_path;
 pub mod cardinality_bipartite_matching;
+pub mod maxflow;
 
 use graph::property::*;
 
@@ -37,6 +39,10 @@ pub trait AdjEdge {
     fn from(&self) -> &Self::VType;
     fn to(&self) -> &Self::VType;
     fn edge(&self) -> &Self::EType;
+}
+
+pub trait ResidualEdge: AdjEdge {
+    fn rev(&self) -> Self;
 }
 
 pub trait Graph<'a> {

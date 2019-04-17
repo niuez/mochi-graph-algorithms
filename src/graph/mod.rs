@@ -66,3 +66,4 @@ pub trait Bipartite<'a>: Undirected<'a> {
     fn left_vertices(&'a self) -> Self::BVIter;
     fn right_vertices(&'a self) -> Self::BVIter;
 }
+pub trait Residual<'a>: Directed<'a> where <Self as Graph<'a>>::AEType: ResidualEdge {}

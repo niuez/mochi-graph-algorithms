@@ -149,6 +149,7 @@ impl<V: Vertex, E: Edge<VType=V>> ResidualNetwork<V,E> {
 }
 
 impl<'a, V, E> Directed<'a> for ResidualNetwork<V, E> where V: Vertex + 'a, E: Edge<VType=V> + 'a {}
+impl<'a, V, E> Residual<'a> for ResidualNetwork<V, E> where V: Vertex + 'a, E: Edge<VType=V> + 'a {}
 
 #[test] 
 

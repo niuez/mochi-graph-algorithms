@@ -31,3 +31,7 @@ pub trait NNegWeight where Self: ArbWeight {}
 
 pub trait IntegerWeight: ArbWeight {}
 
+pub trait Capacity: NNegWeight + IntegerWeight {}
+
+impl<W> Capacity for W where W: NNegWeight + IntegerWeight {}
+

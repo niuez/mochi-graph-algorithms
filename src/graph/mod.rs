@@ -11,9 +11,9 @@ pub mod maxflow;
 
 use graph::property::*;
 
-pub trait Vertex: ID + Clone { }
+pub trait Vertex: ID + Eq + Clone { }
 
-impl<V: ID + Clone> Vertex for V { }
+impl<V: ID + Eq + Clone> Vertex for V { }
 
 pub trait Edge {
     type VType: Vertex;

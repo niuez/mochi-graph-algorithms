@@ -1,5 +1,6 @@
-use graph::*;
-use graph::property::*;
+use graph::kernel::graph::*;
+use graph::kernel::property::*;
+use graph::property::Properties;
 
 use std::cmp::min;
 
@@ -42,7 +43,7 @@ where N: Residual<'a>, N::AEType: ResidualEdge, C: Capacity, F: Fn(&N::EType) ->
 
 #[test]
 fn ford_fulkerson_test() {
-    use graph::residual_network::*;
+    use graph::graph::residual_network::*;
     use graph::property::NNegW;
     {
         let mut g = ResidualNetwork::new(4);
@@ -59,7 +60,7 @@ fn ford_fulkerson_test() {
 #[test]
 #[ignore]
 fn ford_fulkerson_test2() {
-    use graph::residual_network::*;
+    use graph::graph::ResidualNetwork;
     use graph::property::NNegW;
     let mut s = String::new();
     std::io::stdin().read_line(&mut s).unwrap();

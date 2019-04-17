@@ -1,5 +1,6 @@
-use graph::*;
-use graph::property::*;
+use graph::kernel::graph::*;
+use graph::kernel::property::*;
+use graph::property::{ NNegW, Properties };
 
 use std::collections::vec_deque::*;
 
@@ -36,26 +37,22 @@ where G: Graph<'a>, F: Fn(&G::EType) -> NNegW<usize> {
     
 }
 
-#[cfg(test)]
-mod dial_test {
-    use graph::directed_graph::*;
-    use graph::single_source_shortest_path::dial::*;
+#[test]
+fn dial_test() {
+    use graph::graph::DirectedGraph;
+    use graph::property::NNegW;
+    let mut g = DirectedGraph::new(4);
+    g.add_edge((0, 1, 1));
+    g.add_edge((0, 2, 4));
+    g.add_edge((2, 0, 1));
+    g.add_edge((1, 2, 2));
+    g.add_edge((3, 1, 1));
+    g.add_edge((3, 2, 5));
 
-    #[test]
-    fn dial_test() {
-        let mut g = DirectedGraph::new(4);
-        g.add_edge((0, 1, 1));
-        g.add_edge((0, 2, 4));
-        g.add_edge((2, 0, 1));
-        g.add_edge((1, 2, 2));
-        g.add_edge((3, 1, 1));
-        g.add_edge((3, 2, 5));
-
-        let dist = dial(&g, &1, |e| NNegW::Some(e.2 as usize));
-        assert!(dist[&0] == NNegW::Some(3));
-        assert!(dist[&1] == NNegW::Some(0));
-        assert!(dist[&2] == NNegW::Some(2));
-        assert!(dist[&3] == NNegW::Inf);
-    }
+    let dist = dial(&g, &1, |e| NNegW::Some(e.2 as usize));
+    assert!(dist[&0] == NNegW::Some(3));
+    assert!(dist[&1] == NNegW::Some(0));
+    assert!(dist[&2] == NNegW::Some(2));
+    assert!(dist[&3] == NNegW::Inf);
 }
 

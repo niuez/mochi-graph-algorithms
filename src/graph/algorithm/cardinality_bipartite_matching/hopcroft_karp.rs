@@ -1,5 +1,5 @@
-use graph::*;
-use graph::property::*;
+use graph::kernel::graph::*;
+use graph::property::Properties;
 
 use std::collections::vec_deque::*;
 
@@ -74,8 +74,7 @@ where G: Bipartite<'a> {
 
 #[test]
 fn hopcroft_karp_test() {
-    use graph::bipartite_graph::*;
-    use graph::cardinality_bipartite_matching::hopcroft_karp::*;
+    use graph::graph::BipartiteGraph;
 
     {
         let mut g = BipartiteGraph::new(7);

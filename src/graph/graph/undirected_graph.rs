@@ -1,37 +1,43 @@
-use graph::*;
+use graph::kernel::graph::*;
 
 #[derive(Clone,Copy,Eq,PartialEq,Debug)]
-pub struct Eite(pub usize);
+pub struct UEite(usize, bool);
 
-pub struct DiAdjEdge<'a, E: Edge + 'a>(&'a E, usize);
+pub struct UnAdjEdge<'a, E: Edge + 'a>(&'a E, usize, bool);
 
-impl<'a, E: Edge + 'a> ID for DiAdjEdge<'a, E> {
-    fn id(&self) -> usize { self.1 }
+impl<'a, E: Edge + 'a> ID for UnAdjEdge<'a, E> {
+    fn id(&self) -> usize { self.1 } 
 }
 
-impl<'a, E> AdjEdge for DiAdjEdge<'a, E> where E: Edge + 'a {
+impl<'a, E> AdjEdge for UnAdjEdge<'a, E> where E: Edge + 'a {
     type VType = E::VType;
     type EType = E;
-    fn from(&self) -> &E::VType { self.0.from() }
-    fn to(&self) -> &E::VType { self.0.to() }
+    fn from(&self) -> &E::VType { 
+        match self.2 {
+            true => self.0.from(),
+            false => self.0.to(),
+        }
+    }
+    fn to(&self) -> &E::VType {
+        match self.2 {
+            true => self.0.to(),
+            false => self.0.from(),
+        }
+    }
     fn edge(&self) -> &E { self.0 }
 }
 
 pub struct AdjIter<'a, E: Edge + 'a> {
-    iter: std::slice::Iter<'a, Eite>,
+    iter: std::slice::Iter<'a, UEite>,
     edges: &'a Vec<E>,
 }
 
 impl<'a, E: Edge + 'a> std::iter::Iterator for AdjIter<'a, E> {
-    type Item = DiAdjEdge<'a, E>;
+    type Item = UnAdjEdge<'a, E>;
     fn next(&mut self) -> Option<Self::Item> {
         match self.iter.next() {
-            Some(ei) => {
-                Some( DiAdjEdge(&self.edges[ei.0], ei.0) )
-            }
-            None => {
-                None
-            }
+            Some(UEite(ei, dir)) => Some(UnAdjEdge(&self.edges[*ei], *ei, *dir)),
+            None => None,
         }
     }
 }
@@ -42,13 +48,13 @@ pub struct EIter<'a, E: Edge + 'a> {
 }
 
 impl<'a, E: Edge + 'a> std::iter::Iterator for EIter<'a, E> {
-    type Item = DiAdjEdge<'a, E>;
+    type Item = UnAdjEdge<'a, E>;
     fn next(&mut self) -> Option<Self::Item> {
         match self.iter.next() {
             Some(e) => {
                 let i = self.i;
                 self.i += 1;
-                Some(DiAdjEdge(&e, i))
+                Some(UnAdjEdge(&e, i, true))
             }
             None => None
         }
@@ -56,7 +62,7 @@ impl<'a, E: Edge + 'a> std::iter::Iterator for EIter<'a, E> {
 }
 
 pub struct VIter<'a, V: Vertex + 'a> {
-    iter: std::slice:: Iter<'a, Option<V>>,
+    iter: std::slice::Iter<'a, Option<V>>,
 }
 
 impl<'a, V: Vertex + 'a> std::iter::Iterator for VIter<'a, V> {
@@ -64,24 +70,23 @@ impl<'a, V: Vertex + 'a> std::iter::Iterator for VIter<'a, V> {
     fn next(&mut self) -> Option<Self::Item> {
         while let Some(v) = self.iter.next() {
             if v.is_none() { continue; }
-            else { return v.as_ref() }
+            else { return v.as_ref(); }
         }
         None
     }
 }
-
-pub struct DirectedGraph<V: Vertex, E: Edge<VType=V>> {
+pub struct UndirectedGraph<V: Vertex, E: Edge<VType=V>> {
     n: usize,
     m: usize,
-    g: Vec<Vec<Eite>>,
+    g: Vec<Vec<UEite>>,
     es: Vec<E>,
     vs: Vec<Option<V>>, 
 }
 
-impl<'a, V, E> Graph<'a> for DirectedGraph<V,E> where V: Vertex + 'a, E: Edge<VType=V> + 'a {
+impl<'a, V, E> Graph<'a> for UndirectedGraph<V,E> where V: Vertex + 'a, E: Edge<VType=V> + 'a {
     type VType = V;
     type EType = E;
-    type AEType = DiAdjEdge<'a, E>;
+    type AEType = UnAdjEdge<'a, E>;
     type AdjIter = AdjIter<'a, E>;
     type EIter = EIter<'a, E>;
     type VIter = VIter<'a, V>;
@@ -91,7 +96,7 @@ impl<'a, V, E> Graph<'a> for DirectedGraph<V,E> where V: Vertex + 'a, E: Edge<VT
     fn edges(&'a self) -> Self::EIter {
         EIter { i: 0, iter: self.es.iter() }
     }
-    fn vertices(&'a self) -> Self::VIter { 
+    fn vertices(&'a self) -> Self::VIter {
         VIter { iter: self.vs.iter() }
     }
     fn v_size(&self) -> usize {
@@ -102,14 +107,14 @@ impl<'a, V, E> Graph<'a> for DirectedGraph<V,E> where V: Vertex + 'a, E: Edge<VT
     }
 }
 
-impl<V: Vertex, E: Edge<VType=V>> DirectedGraph<V,E> {
+impl<V: Vertex, E: Edge<VType=V>> UndirectedGraph<V,E> {
     pub fn new(n: usize) -> Self {
-        DirectedGraph {
+        UndirectedGraph {
             n: n,
             m: 0,
-            g: vec![Vec::<Eite>::new(); n],
+            g: vec![Vec::<UEite>::new(); n],
             es: Vec::new(),
-            vs: vec![None; n], 
+            vs: vec![None; n],
         }
     }
 
@@ -127,37 +132,30 @@ impl<V: Vertex, E: Edge<VType=V>> DirectedGraph<V,E> {
     }
 
     pub fn add_edge(&mut self, e: E) {
-        let ei = Eite(self.m);
+        let ei = self.m;
         self.m += 1;
-        self.g[e.from().id()].push(ei);
+        self.g[e.from().id()].push(UEite(ei, true));
+        self.g[e.to().id()].push(UEite(ei, false));
         self.vertex_regist(e.from().clone());
         self.vertex_regist(e.to().clone());
         self.es.push(e);
     }
 }
 
-impl<'a, V, E> Directed<'a> for DirectedGraph<V, E> where V: Vertex + 'a, E: Edge<VType=V> + 'a {}
+impl<'a, V, E> Undirected<'a> for UndirectedGraph<V, E> where V: Vertex + 'a, E: Edge<VType=V> + 'a {}
 
 #[test]
-fn digraph_test() {
-    let mut g = DirectedGraph::new(4);
+fn undigraph_test() {
+    let mut g = UndirectedGraph::new(4);
     g.add_edge((0, 1));
-    g.add_edge((1, 2));
     g.add_edge((2, 3));
     for e in g.delta(&0) {
         assert!(e.to() == &1);
     }
     for e in g.delta(&1) {
-        assert!(e.to() == &2);
+        assert!(e.to() == &0);
     }
     for e in g.delta(&2) {
         assert!(e.to() == &3);
     }
-    for e in g.delta(&0) {
-        for ee in g.delta(e.to()) {
-            assert!(ee.to() == &2)
-        }
-    }
 }
-
-

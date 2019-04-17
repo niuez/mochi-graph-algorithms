@@ -1,6 +1,6 @@
-use graph::*;
-use graph::property::*;
-
+use graph::kernel::graph::*;
+use graph::kernel::property::*;
+use graph::property::Properties;
 
 pub fn feasible_potential<'a, G, W, F>(g: &'a G, cost: F) -> Option<Properties<W>>
 where G: Directed<'a>, W: ArbWeight, F: Fn(&G::EType) -> W {

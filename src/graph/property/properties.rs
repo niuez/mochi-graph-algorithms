@@ -1,12 +1,6 @@
+use graph::kernel::graph::ID;
+
 use std::ops::{ Index, IndexMut };
-
-pub trait ID {
-    fn id(&self) -> usize;
-}
-
-impl ID for usize {
-    fn id(&self) -> usize { *self }
-}
 
 #[derive(Clone)]
 pub struct Properties<W: Clone> {

@@ -1,4 +1,4 @@
-use graph::*;
+use graph::kernel::graph::*;
 
 #[derive(Clone,Copy,Eq,PartialEq,Debug)]
 pub struct UEite(usize, bool);

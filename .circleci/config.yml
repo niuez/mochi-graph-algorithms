@@ -10,4 +10,4 @@ jobs:
       - run:
           name: test
           command: |
-            cargo test
+            cargo test graph

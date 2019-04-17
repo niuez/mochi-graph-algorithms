@@ -54,7 +54,7 @@ impl<'a, E: Edge + 'a> std::iter::Iterator for EIter<'a, E> {
             Some(e) => {
                 let i = self.i;
                 self.i += 1;
-                Some(UnAdjEdge(&e, i, false))
+                Some(UnAdjEdge(&e, i, true))
             }
             None => None
         }

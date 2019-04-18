@@ -1,6 +1,7 @@
 use graph::kernel::graph::*;
 use graph::kernel::property::*;
-use graph::property::{ Properties, NNegW };
+use graph::kernel::Properties;
+use graph::property::NNegW;
 
 pub fn scaling_dijkstra<'a, G, F>(g: &'a G, s: &G::VType, cost: F) -> Properties<NNegW<usize>>
 where G: Graph<'a>, F: Fn(&G::EType) -> NNegW<usize> { 

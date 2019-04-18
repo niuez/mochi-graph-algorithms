@@ -1,6 +1,6 @@
 use graph::kernel::graph::*;
 use graph::kernel::property::*;
-use graph::property::Properties;
+use graph::kernel::Properties;
 
 pub fn warshall_floyd<'a, G, W, F>(g: &'a G, cost: F) -> Option<Properties<Properties<W>>>
 where G: Graph<'a>, W: ArbWeight, F: Fn(&G::EType) -> W {

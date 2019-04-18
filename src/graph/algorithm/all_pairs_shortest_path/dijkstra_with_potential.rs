@@ -1,6 +1,6 @@
 use graph::kernel::graph::*;
 use graph::kernel::property::*;
-use graph::property::Properties;
+use graph::kernel::Properties;
 use graph::algorithm::single_source_shortest_path::feasible_potential;
 use graph::algorithm::single_source_shortest_path::dijkstra;
 

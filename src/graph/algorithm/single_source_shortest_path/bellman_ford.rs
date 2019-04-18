@@ -1,6 +1,6 @@
 use graph::kernel::graph::*;
 use graph::kernel::property::*;
-use graph::property::Properties;
+use graph::kernel::Properties;
 
 
 pub fn bellman_ford<'a, G, W, F>(g: &'a G, s: &G::VType, cost: F) -> Properties<W>

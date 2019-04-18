@@ -1,6 +1,7 @@
 use graph::kernel::graph::*;
 use graph::kernel::property::*;
-use graph::property::{ NNegW, Properties };
+use graph::kernel::Properties;
+use graph::property::NNegW;
 
 use std::collections::vec_deque::*;
 

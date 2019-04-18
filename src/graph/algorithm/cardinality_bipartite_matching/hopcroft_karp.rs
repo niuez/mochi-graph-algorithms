@@ -1,5 +1,5 @@
 use graph::kernel::graph::*;
-use graph::property::Properties;
+use graph::kernel::Properties;
 
 use std::collections::vec_deque::*;
 

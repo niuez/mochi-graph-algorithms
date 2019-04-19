@@ -40,6 +40,16 @@ where G: Graph<'a> + 'a, F: Fn(&G::EType) -> bool + 'a {
     }
 }
 
+impl<'a, G, F> SubEdgeGraph<'a, G, F>
+where G: Graph<'a> + 'a, F: Fn(&G::EType) -> bool + 'a {
+    pub fn new(g: &'a G, cond: F) -> Self {
+        SubEdgeGraph {
+            g: g,
+            cond: cond,
+        }
+    }
+}
+
 impl<'a, G, F> Graph<'a> for SubEdgeGraph<'a, G, F>
 where G: Graph<'a> + 'a, F: Fn(&G::EType) -> bool + 'a {
     type VType = G::VType;
@@ -85,3 +95,29 @@ where G: Bipartite<'a> + 'a, F: Fn(&G::EType) -> bool + 'a {
 impl<'a, G, F> Residual<'a> for SubEdgeGraph<'a, G, F>
 where G: Residual<'a> + 'a, G::AEType: ResidualEdge, F: Fn(&G::EType) -> bool + 'a {}
 
+#[test]
+fn subedge_graph_test() {
+    use graph::graph::DirectedGraph;
+    use graph::property::NNegW;
+    use graph::algorithm::single_source_shortest_path::bfs;
+    let mut g = DirectedGraph::new(6);
+    g.add_edge((0, 1, true));
+    g.add_edge((1, 3, true));
+    g.add_edge((3, 5, true));
+    g.add_edge((0, 2, true));
+    g.add_edge((2, 3, true));
+    g.add_edge((4, 5, true));
+
+    g.add_edge((1, 5, false));
+    g.add_edge((0, 4, false));
+    g.add_edge((2, 4, false));
+
+    let sg = SubEdgeGraph::new(&g, |e| e.2);
+    let dist = bfs(&sg, &0);
+    assert!(dist[&0] == NNegW::Some(0));
+    assert!(dist[&1] == NNegW::Some(1));
+    assert!(dist[&2] == NNegW::Some(1));
+    assert!(dist[&3] == NNegW::Some(2));
+    assert!(dist[&4] == NNegW::Inf);
+    assert!(dist[&5] == NNegW::Some(3));
+}

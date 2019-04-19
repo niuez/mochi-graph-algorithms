@@ -22,7 +22,7 @@ pub trait ArbWeight where Self: ToNNegWeight + ToArbWeight + Property + std::ops
 
 pub trait NNegWeight where Self: ArbWeight {}
 
-pub trait IntegerWeight: ArbWeight {}
+pub trait IntegerWeight: ArbWeight + std::ops::Shl<usize, Output=Self> + std::ops::Shr<usize, Output=Self> {}
 
 pub trait Capacity: NNegWeight + IntegerWeight {}
 

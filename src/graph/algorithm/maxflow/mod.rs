@@ -1,6 +1,7 @@
 pub mod ford_fulkerson;
 pub mod dinic;
 pub mod fifo_push_relabel;
+pub mod fujishige;
 
 pub use self::ford_fulkerson::ford_fulkerson;
 pub use self::dinic::dinic;

@@ -16,7 +16,7 @@ where G: Graph<'a>, F: Fn(&G::EType) -> NNegW<usize> {
     let logw = {
         let mut cnt = 0usize;
         while mw > W::zero() {
-            mw = mw >> NNegW::Some(1);
+            mw = mw >> 1;
             cnt += 1;
         }
         cnt
@@ -25,7 +25,7 @@ where G: Graph<'a>, F: Fn(&G::EType) -> NNegW<usize> {
     for k in (0..logw+1).rev() {
 
         for v in g.vertices() {
-            dist[v] = dist[v] << NNegW::Some(1);
+            dist[v] = dist[v] << 1;
         }
 
         let mut temp = Properties::new(n, &W::inf());
@@ -37,7 +37,7 @@ where G: Graph<'a>, F: Fn(&G::EType) -> NNegW<usize> {
             while let Some(v) = heap[d].pop() {
                 if temp[&v] < NNegW::Some(d) { continue; }
                 for e in g.delta(&v) {
-                    let c = (cost(e.edge()) >> NNegW::Some(k)) + dist[e.from()] - dist[e.to()];
+                    let c = (cost(e.edge()) >> k) + dist[e.from()] - dist[e.to()];
                     if temp[e.from()] + c < temp[e.to()] && temp[e.from()] + c < NNegW::Some(heap.len()) {
                         temp[e.to()] = temp[e.from()] + c;
                         heap[d + match c { NNegW::Some(cc) => cc, _ => unreachable!() }].push(e.to().clone());

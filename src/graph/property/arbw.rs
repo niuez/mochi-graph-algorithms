@@ -115,28 +115,24 @@ impl<W> ToArbWeight for ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W> 
     }
 }
 
-impl std::ops::Shl for ArbW<usize> {
+impl<W> std::ops::Shl<usize> for ArbW<W>
+where W: Zero + IsNum + Integer + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
     type Output = Self;
-    fn shl(self, rhs: Self) -> Self {
-        match rhs {
-            ArbW::Some(r) => match self {
-                ArbW::Some(d) => ArbW::Some(d.shl(r)), 
-                other => other, 
-            }
-            _ => unreachable!(), 
+    fn shl(self, rhs: usize) -> Self {
+        match self {
+            ArbW::Some(d) => ArbW::Some(d.shl(rhs)), 
+            inf => inf, 
         }
     }
 }
 
-impl std::ops::Shr for ArbW<usize> {
+impl<W> std::ops::Shr<usize> for ArbW<W> 
+where W: Zero + IsNum + Integer + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy + std::ops::Shr<usize, Output=W> {
     type Output = Self;
-    fn shr(self, rhs: Self) -> Self {
-        match rhs {
-            ArbW::Some(r) => match self {
-                ArbW::Some(d) => ArbW::Some(d.shr(r)), 
-                other => other, 
-            }
-            _ => unreachable!(), 
+    fn shr(self, rhs: usize) -> Self {
+        match self {
+            ArbW::Some(d) => ArbW::Some(d.shr(rhs)),
+            inf => inf,
         }
     }
 }
@@ -148,4 +144,4 @@ impl<W> ArbWeight for ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W> + 
     fn neg_inf() -> Self { ArbW::NegInf }
 }
 
-impl<W> IntegerWeight for ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy + Integer {}
+impl<W> IntegerWeight for ArbW<W> where W: Zero + IsNum + Integer + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {}

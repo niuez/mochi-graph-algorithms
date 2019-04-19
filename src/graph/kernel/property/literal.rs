@@ -168,7 +168,7 @@ impl ToArb for u8 {
     }
 }
 
-pub trait Integer {}
+pub trait Integer: Sized + std::ops::Shl<usize, Output=Self> + std::ops::Shr<usize, Output=Self> {}
 
 impl Integer for usize {}
 impl Integer for u64 {}

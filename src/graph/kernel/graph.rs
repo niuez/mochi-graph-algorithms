@@ -30,11 +30,8 @@ impl<V, P> Edge for (V, V, P) where V: Vertex, P: Property {
     fn to(&self) -> &Self::VType { &self.1 }
 }
 
-pub trait AdjEdge: ID {
-    type VType: Vertex;
+pub trait AdjEdge: ID + Edge {
     type EType: Edge<VType=Self::VType>;
-    fn from(&self) -> &Self::VType;
-    fn to(&self) -> &Self::VType;
     fn edge(&self) -> &Self::EType;
 }
 

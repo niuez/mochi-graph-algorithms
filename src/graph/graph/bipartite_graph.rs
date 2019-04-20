@@ -9,9 +9,8 @@ impl<'a, E: Edge + 'a> ID for UnAdjEdge<'a, E> {
     fn id(&self) -> usize { self.1 } 
 }
 
-impl<'a, E> AdjEdge for UnAdjEdge<'a, E> where E: Edge + 'a {
+impl<'a, E> Edge for UnAdjEdge<'a, E> where E: Edge + 'a {
     type VType = E::VType;
-    type EType = E;
     fn from(&self) -> &E::VType { 
         match self.2 {
             true => self.0.from(),
@@ -24,6 +23,10 @@ impl<'a, E> AdjEdge for UnAdjEdge<'a, E> where E: Edge + 'a {
             false => self.0.from(),
         }
     }
+}
+
+impl<'a, E> AdjEdge for UnAdjEdge<'a, E> where E: Edge + 'a {
+    type EType = E;
     fn edge(&self) -> &E { self.0 }
 }
 

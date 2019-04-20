@@ -9,11 +9,14 @@ impl<'a, E: Edge + 'a> ID for DiAdjEdge<'a, E> {
     fn id(&self) -> usize { self.1 }
 }
 
-impl<'a, E> AdjEdge for DiAdjEdge<'a, E> where E: Edge + 'a {
+impl<'a, E> Edge for DiAdjEdge<'a, E> where E: Edge + 'a {
     type VType = E::VType;
-    type EType = E;
     fn from(&self) -> &E::VType { self.0.from() }
     fn to(&self) -> &E::VType { self.0.to() }
+}
+
+impl<'a, E> AdjEdge for DiAdjEdge<'a, E> where E: Edge + 'a {
+    type EType = E;
     fn edge(&self) -> &E { self.0 }
 }
 

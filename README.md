@@ -4,52 +4,53 @@
 
 ## algorithms
 
-### single_source_shortest_path
+### single\_source\_shortest\_path
 
+- bfs (only unit length)
+  O(V + E)
 - dijkstra(with binary heap) 
   O((V + E)logV)
-- bellman_ford 
+- bellman\_ford 
   O(VE)
 - spfa
   O(VE) faster than BF
-- d_any_heap_dijkstra
-  O(E log_E/V_V)
 - dial
   O(E + V * Wmax)
-- scaling_dijkstra
+- scaling\_dijkstra
   O(Elog(Wmax))
 
-## all_pairs_shortest_path
+## all\_pairs\_shortest\_path
 
 - Warshall-Floyd
   O(V^3)
+- dijkstra\_with\_potential
+  O(V(V + E)logV)
 
 ### maxflow
 
 - dinic
   O(V^2E)
-- fifo_push_relabel
+- fifo\_push\_relabel
   O(V^3)
-- ford_fulkerson
+- ford\_fulkerson
   O(EF)
 - fujishige
   O(VElog(Cmax))
 
-### cardinality_bipartite_matching
+### cardinality\_bipartite\_matching
 
-- hopcroft_karp
+- hopcroft\_karp
   O(V^(1/2)E)
 
-### cardinality_nonbipartite_matching
+### cardinality\_general\_matching
 
-- gabow_e_algorithm
+- gabow\_e\_algorithm
   O(VElogV)
 
 
 ## TODO
 
 - RHS-algorithm(maxflow)
-- potential dijkstra (apsp)
 - Orlin scaling algorithm (maxflow) (difficult)
 - primal dual (mcstf)
 - min cost circulation

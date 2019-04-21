@@ -5,26 +5,27 @@ use graph::kernel::property::*;
 pub struct PathW<W, V> where W: ArbWeight, V: Vertex {
     pub weight: W,
     pub before: Option<V>,
+    pub eid: Option<usize>,
 }
 
 impl<W, V> ToNNegWeight for PathW<W, V> where W: ArbWeight, V: Vertex {
     type Output = PathW<<W as ToNNegWeight>::Output, V>;
     fn to_nnegw(&self) -> Self::Output {
-        PathW { weight: self.weight.to_nnegw(), before: self.before }
+        PathW { weight: self.weight.to_nnegw(), before: self.before, eid: self.eid }
     }
 }
 
 impl<W, V> ToArbWeight for PathW<W, V> where W: ArbWeight, V: Vertex {
     type Output = PathW<<W as ToArbWeight>::Output, V>;
     fn to_arbw(&self) -> Self::Output {
-        PathW { weight: self.weight.to_arbw(), before: self.before }
+        PathW { weight: self.weight.to_arbw(), before: self.before, eid: self.eid }
     }
 }
 
 impl<W, V> std::ops::Add for PathW<W, V> where W: ArbWeight, V: Vertex {
     type Output = Self;
     fn add(self, rhs: Self) -> Self::Output {
-        PathW { weight: self.weight + rhs.weight, before: rhs.before }
+        PathW { weight: self.weight + rhs.weight, before: rhs.before, eid: rhs.eid }
     }
 }
 
@@ -49,9 +50,9 @@ impl<W, V> std::cmp::Ord for PathW<W, V> where W: ArbWeight, V: Vertex {
 }
 
 impl<W, V> ArbWeight for PathW<W, V> where W: ArbWeight, V: Vertex {
-    fn inf() -> Self { PathW{ weight: W::inf(), before: None } }
-    fn zero() -> Self { PathW{ weight: W::zero(), before: None } }
-    fn neg_inf() -> Self { PathW{ weight: W::neg_inf(), before: None } }
+    fn inf() -> Self { PathW{ weight: W::inf(), before: None, eid: None } }
+    fn zero() -> Self { PathW{ weight: W::zero(), before: None, eid: None } }
+    fn neg_inf() -> Self { PathW{ weight: W::neg_inf(), before: None, eid: None } }
 }
 
 impl<W, V> NNegWeight for PathW<W, V> where W: NNegWeight, V: Vertex {}
@@ -71,7 +72,7 @@ fn pathw_test() {
         g.add_edge((1, 5, 4));
         g.add_edge((4, 5, 2));
 
-        let path = dijkstra(&g, &0, |e| PathW{ weight: NNegW::Some(e.edge().2), before: Some(e.from().clone()) });
+        let path = dijkstra(&g, &0, |e| PathW{ weight: NNegW::Some(e.edge().2), before: Some(e.from().clone()), eid: Some(e.id()) });
 
         assert!(path[&0].weight == NNegW::Some(0) && path[&0].before == None);
         assert!(path[&1].weight == NNegW::Some(1) && path[&1].before == Some(0));

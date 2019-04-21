@@ -55,4 +55,4 @@ impl<W> Capacity for W where W: NNegWeight + IntegerWeight + SubtractableWeight 
 
 pub trait Cost<Cap>: ArbWeight + SubtractableWeight + std::ops::Mul<Cap, Output=Self> {}
 
-impl<Co, Cap> Cost<Cap> for Co where Cap: Capacity, Co: ArbWeight + SubtractableWeight + std::ops::Mul<Cap, Output=Self> {}
+impl<Co, Cap> Cost<Cap> for Co where Cap: Capacity, Co: ArbWeight + SubtractableWeight + SubtractableWeight + std::ops::Mul<Cap, Output=Self> {}

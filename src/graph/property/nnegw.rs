@@ -3,12 +3,12 @@ use graph::kernel::property::literal::{ Zero, IsNN, IsNum, ToArb, Integer };
 use graph::property::ArbW;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
-pub enum NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
+pub enum NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::cmp::Ord + Copy {
     Inf,
     Some(W), 
 }
 
-impl<W> std::ops::Add for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
+impl<W> std::ops::Add for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::cmp::Ord + Copy {
     type Output = Self;
     fn add(self, rhs: Self) -> Self {
         match self {
@@ -47,13 +47,13 @@ impl<W> std::ops::Sub for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<
 }
 
 
-impl<W> std::cmp::PartialOrd for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
+impl<W> std::cmp::PartialOrd for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::cmp::Ord + Copy {
     fn partial_cmp(&self, rhs: &Self) -> Option<std::cmp::Ordering> {
         Some(self.cmp(rhs))
     }
 }
 
-impl<W> std::cmp::Ord for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
+impl<W> std::cmp::Ord for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::cmp::Ord + Copy {
     fn cmp(&self, rhs: &Self) -> std::cmp::Ordering {
         match self {
             NNegW::Inf => {
@@ -72,16 +72,16 @@ impl<W> std::cmp::Ord for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<
     }
 }
 
-impl<W> IsNN for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {}
+impl<W> IsNN for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::cmp::Ord + Copy {}
 
-impl<W> ToNNegWeight for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
+impl<W> ToNNegWeight for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::cmp::Ord + Copy {
     type Output = Self;
     fn to_nnegw(&self) -> Self::Output {
         self.clone()
     }
 }
 
-impl<W> ToArbWeight for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
+impl<W> ToArbWeight for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::cmp::Ord + Copy {
     type Output = ArbW<<W as ToArb>::Output>;
     fn to_arbw(&self) -> Self::Output {
         match self {
@@ -92,7 +92,7 @@ impl<W> ToArbWeight for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Ou
 }
 
 impl<W> std::ops::Shl<usize> for NNegW<W>
-where W: Zero + IsNum + IsNN + Integer + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
+where W: Zero + IsNum + IsNN + Integer + std::ops::Add<Output=W> + std::cmp::Ord + Copy {
     type Output = Self;
     fn shl(self, rhs: usize) -> Self {
         match self {
@@ -104,7 +104,7 @@ where W: Zero + IsNum + IsNN + Integer + std::ops::Add<Output=W> + std::ops::Sub
 
 
 impl<W> std::ops::Shr<usize> for NNegW<W>
-where W: Zero + IsNum + IsNN + Integer + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
+where W: Zero + IsNum + IsNN + Integer + std::ops::Add<Output=W> + std::cmp::Ord + Copy {
     type Output = Self;
     fn shr(self, rhs: usize) -> Self {
         match self {
@@ -116,10 +116,10 @@ where W: Zero + IsNum + IsNN + Integer + std::ops::Add<Output=W> + std::ops::Sub
 
 
 
-impl<W> ArbWeight for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {
+impl<W> ArbWeight for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::cmp::Ord + Copy {
     fn inf() -> Self { NNegW::Inf }
     fn zero() -> Self { NNegW::Some(W::zero()) }
 }
 
-impl<W> NNegWeight for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {}
+impl<W> NNegWeight for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<Output=W> + std::cmp::Ord + Copy {}
 

@@ -16,9 +16,9 @@ impl ID for usize {
 }
 
 /// Trait for vertices of graphs.
-pub trait Vertex: ID + Eq + Clone { }
+pub trait Vertex: ID + Eq + Copy { }
 
-impl<V: ID + Eq + Clone> Vertex for V { }
+impl<V: ID + Eq + Copy> Vertex for V { }
 
 /// Trait for edges of graphs. 
 pub trait Edge {

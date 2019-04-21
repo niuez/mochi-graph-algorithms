@@ -29,7 +29,7 @@ pub trait ToArbWeight {
 
 /// Trait of arbitrary weights.
 /// the arbirary weight has infinity, zero and negative infinity.
-pub trait ArbWeight where Self: ToNNegWeight + ToArbWeight + Property + std::ops::Add<Output=Self> + std::ops::Sub<Output=Self> + std::cmp::Ord {
+pub trait ArbWeight where Self: ToNNegWeight + ToArbWeight + Property + std::ops::Add<Output=Self> + std::cmp::Ord {
     fn inf() -> Self;
     fn zero() -> Self;
     fn neg_inf() -> Self { unreachable!() }
@@ -42,8 +42,17 @@ pub trait NNegWeight where Self: ArbWeight {}
 /// types implementing this use the scaling algorithms.
 pub trait IntegerWeight: ArbWeight + std::ops::Shl<usize, Output=Self> + std::ops::Shr<usize, Output=Self> {}
 
+impl<W> IntegerWeight for W where W: ArbWeight + std::ops::Shl<usize, Output=Self> + std::ops::Shr<usize, Output=Self> {}
+
+pub trait SubtractableWeight: ArbWeight + std::ops::Sub<Output=Self> {}
+
+impl<W> SubtractableWeight for W where W: ArbWeight + std::ops::Sub<Output=Self> {}
+
 /// Trait of capacity for maxflow, mcf, and so on.
-pub trait Capacity: NNegWeight + IntegerWeight {}
+pub trait Capacity: NNegWeight + IntegerWeight + SubtractableWeight  {}
 
-impl<W> Capacity for W where W: NNegWeight + IntegerWeight {}
+impl<W> Capacity for W where W: NNegWeight + IntegerWeight + SubtractableWeight {}
 
+pub trait Cost<Cap>: ArbWeight + SubtractableWeight + std::ops::Mul<Cap, Output=Self> {}
+
+impl<Co, Cap> Cost<Cap> for Co where Cap: Capacity, Co: ArbWeight + SubtractableWeight + std::ops::Mul<Cap, Output=Self> {}

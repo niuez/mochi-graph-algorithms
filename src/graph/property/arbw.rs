@@ -1,4 +1,4 @@
-use graph::kernel::property::{ ArbWeight, ToNNegWeight, ToArbWeight, IntegerWeight };
+use graph::kernel::property::{ ArbWeight, ToNNegWeight, ToArbWeight };
 use graph::kernel::property::literal::{ Zero, ToNNeg, IsNum, Integer };
 use graph::property::NNegW;
 
@@ -143,5 +143,3 @@ impl<W> ArbWeight for ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W> + 
     fn zero() -> Self { ArbW::Some(W::zero()) }
     fn neg_inf() -> Self { ArbW::NegInf }
 }
-
-impl<W> IntegerWeight for ArbW<W> where W: Zero + IsNum + Integer + std::ops::Add<Output=W> + std::ops::Sub<Output=W> + std::cmp::Ord + Copy {}

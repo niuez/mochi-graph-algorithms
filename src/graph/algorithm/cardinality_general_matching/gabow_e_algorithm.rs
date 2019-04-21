@@ -85,7 +85,7 @@ fn augment_check(g: &UndirectedGraph<usize,(usize,usize)>, mate: &mut Vec<usize>
     que.push_back(u);
 
     while let Some(x) = que.pop_front() {
-        for e in g.delta(&x) {
+        for ref e in g.delta(&x) {
             let y = *e.to();
             if mate[y] == 0 && y != u {
                 mate[y] = x;
@@ -133,7 +133,7 @@ where G: Undirected<'a> {
         augment_check(&g,&mut mate, &mut label, &mut first,i);
     }
 
-    for e in ug.edges() {
+    for ref e in ug.edges() {
         if mate[e.from().id() + 1] == e.to().id() + 1 {
             ans.push((e.from().clone(), e.to().clone()));
             mate[e.from().id() + 1] = 0;

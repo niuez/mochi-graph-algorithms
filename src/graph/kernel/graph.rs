@@ -126,3 +126,8 @@ pub trait Bipartite<'a>: Undirected<'a> {
 /// Trait of residual network
 /// `AEType` must be `ResidualEdge`.
 pub trait Residual<'a>: Directed<'a> where <Self as Graph<'a>>::AEType: ResidualEdge {}
+
+pub fn generate_func<AE, P, F>(f: F) -> impl Fn(&AE) -> P
+where AE: AdjEdge, P: Property, F: Fn(&AE::EType) -> P {
+    move |ae| f(ae.edge())
+}

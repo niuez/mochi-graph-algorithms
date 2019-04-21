@@ -6,7 +6,7 @@ use std::cmp::min;
 use std::collections::VecDeque;
 
 pub fn fifo_push_relabel<'a, N, C, F>(g: &'a N, s: &N::VType, t: &N::VType, capacity: F) -> C
-where N: Residual<'a>, N::AEType: ResidualEdge, C: Capacity, F: Fn(&N::EType) -> C {
+where N: Residual<'a>, N::AEType: ResidualEdge, C: Capacity, F: Fn(&N::AEType) -> C {
     let n = g.v_size();
     let mut cap = Properties::new(g.e_size(), &C::zero());
     let mut ex = Properties::new(g.v_size(), &C::zero());
@@ -15,7 +15,7 @@ where N: Residual<'a>, N::AEType: ResidualEdge, C: Capacity, F: Fn(&N::EType) ->
     d[s] = g.v_size();
     d[t] = 0;
 
-    for ref e in g.edges() { cap[e] = capacity(e.edge()); }
+    for ref e in g.edges() { cap[e] = capacity(e); }
 
     for ref e in g.delta(s) {
         if e.to() != t && e.to() != s && ex[e.to()] == C::zero() && cap[e] > C::zero() {
@@ -71,7 +71,7 @@ fn fifo_push_relabel_test() {
         g.add_edge((1, 2, 1));
         g.add_edge((1, 3, 1));
         g.add_edge((2, 3, 2));
-        let mflow = fifo_push_relabel(&g, &0, &3, |e| NNegW::Some(e.2));
+        let mflow = fifo_push_relabel(&g, &0, &3, |e| NNegW::Some(e.edge().2));
         assert!(mflow == NNegW::Some(3));
     }
 }

@@ -5,13 +5,13 @@ use graph::kernel::Properties;
 use std::cmp::{ min, max };
 
 pub fn fujishige<'a, N, C, F>(g: &'a N, s: &N::VType, t: &N::VType, capacity: F) -> C
-where N: Residual<'a>, N::AEType: ResidualEdge, C: Capacity, F: Fn(&N::EType) -> C {
+where N: Residual<'a>, N::AEType: ResidualEdge, C: Capacity, F: Fn(&N::AEType) -> C {
     let n = g.v_size();
     let mut cap = Properties::new(g.e_size(), &C::zero());
     let mut alpha = C::zero();
     let mut ans = C::zero();
     for ref e in g.edges() {
-        cap[e] = capacity(e.edge());
+        cap[e] = capacity(e);
         alpha = max(alpha, cap[e]);
     }
     while alpha > C::zero() {
@@ -79,7 +79,7 @@ fn fujishige_test() {
         g.add_edge((1, 2, 1));
         g.add_edge((1, 3, 1));
         g.add_edge((2, 3, 2));
-        let mflow = fujishige(&g, &0, &3, |e| NNegW::Some(e.2));
+        let mflow = fujishige(&g, &0, &3, |e| NNegW::Some(e.edge().2));
         assert!(mflow == NNegW::Some(3));
     }
 }

@@ -30,7 +30,7 @@ impl<W: NNegWeight, V: Vertex> Eq for DijkstraNode<W, V> { }
 
 
 pub fn dijkstra<'a, G, W, F>(g: &'a G, s: &G::VType, cost: F) -> Properties<W>
-where G: Graph<'a>, W: NNegWeight, F: Fn(&G::EType) -> W { 
+where G: Graph<'a>, W: NNegWeight, F: Fn(&G::AEType) -> W { 
 
     let n = g.v_size();
     let mut dist = Properties::new(n, &W::inf());
@@ -41,9 +41,9 @@ where G: Graph<'a>, W: NNegWeight, F: Fn(&G::EType) -> W {
 
     while let Some(DijkstraNode { dist: d, ver: v}) = heap.pop() {
         if dist[&v] < d { continue }
-        for e in g.delta(&v) {
-            if dist[e.from()] + cost(e.edge()) < dist[e.to()] {
-                dist[e.to()] = dist[e.from()] + cost(e.edge());
+        for ref e in g.delta(&v) {
+            if dist[e.from()] + cost(e) < dist[e.to()] {
+                dist[e.to()] = dist[e.from()] + cost(e);
                 heap.push(DijkstraNode{ dist: dist[e.to()], ver: e.to().clone() })
             }
         }
@@ -57,14 +57,14 @@ fn dijkstra_test() {
     use graph::graph::DirectedGraph;
     use graph::property::NNegW;
     let mut g = DirectedGraph::new(4);
-    g.add_edge((0, 1, 1));
+    g.add_edge((0usize, 1usize, 1usize));
     g.add_edge((0, 2, 4));
     g.add_edge((2, 0, 1));
     g.add_edge((1, 2, 2));
     g.add_edge((3, 1, 1));
     g.add_edge((3, 2, 5));
 
-    let dist = dijkstra(&g, &1, |e| NNegW::Some(e.2 as usize));
+    let dist = dijkstra(&g, &1, |e| NNegW::Some(e.edge().2));
     assert!(dist[&0] == NNegW::Some(3));
     assert!(dist[&1] == NNegW::Some(0));
     assert!(dist[&2] == NNegW::Some(2));

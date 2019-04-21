@@ -3,14 +3,14 @@ use graph::kernel::property::*;
 use graph::kernel::Properties;
 
 pub fn warshall_floyd<'a, G, W, F>(g: &'a G, cost: F) -> Option<Properties<Properties<W>>>
-where G: Graph<'a>, W: ArbWeight, F: Fn(&G::EType) -> W {
+where G: Graph<'a>, W: ArbWeight, F: Fn(&G::AEType) -> W {
     let n = g.v_size();
     let mut dist = Properties::new(n, &Properties::new(n, &W::inf()));
 
     for v in g.vertices() {
         dist[v][v] = W::zero();
-        for e in g.delta(v) {
-            dist[e.from()][e.to()] = cost(e.edge());
+        for ref e in g.delta(v) {
+            dist[e.from()][e.to()] = cost(e);
         }
     }
 
@@ -43,7 +43,7 @@ fn warshall_floyd_test() {
         g.add_edge((1, 3, 4));
         g.add_edge((2, 3, 1));
         g.add_edge((3, 2, 7));
-        let dist = warshall_floyd(&g, |e| ArbW::Some(e.2)).unwrap();
+        let dist = warshall_floyd(&g, |e| ArbW::Some(e.edge().2)).unwrap();
         let ans = vec![vec![0, 1, 3, 4], vec![-1, 0, 2, 3], vec![-1, -1, 0, 1], vec![-1, -1, 7, 0]];
         for u in g.vertices() {
             for v in g.vertices() {

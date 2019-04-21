@@ -6,7 +6,7 @@ use std::collections::vec_deque::*;
 pub fn hk_dfs<'a, G>(g: &'a G, v: &G::VType, dist: &mut Properties<Option<usize>>, mate: &mut Properties<Option<G::VType>>, used: &mut Properties<bool>, vis: &mut Properties<bool>) -> bool 
 where G: Bipartite<'a> {
     vis[v] = true;
-    for e in g.delta(v) {
+    for ref e in g.delta(v) {
         if match mate[e.to()].clone() {
             Some(ref m) => {
                 !vis[m] && 
@@ -44,7 +44,7 @@ where G: Bipartite<'a> {
         }
 
         while let Some(v) = que.pop_front() {
-            for e in g.delta(&v) {
+            for ref e in g.delta(&v) {
                 if let Some(m) = mate[e.to()].as_ref() {
                     if dist[m] == None {
                         dist[m] = Some(dist[&v].unwrap() + 1);

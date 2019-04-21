@@ -152,13 +152,13 @@ fn undigraph_test() {
     let mut g = UndirectedGraph::new(4);
     g.add_edge((0, 1));
     g.add_edge((2, 3));
-    for e in g.delta(&0) {
+    for ref e in g.delta(&0) {
         assert!(e.to() == &1);
     }
-    for e in g.delta(&1) {
+    for ref e in g.delta(&1) {
         assert!(e.to() == &0);
     }
-    for e in g.delta(&2) {
+    for ref e in g.delta(&2) {
         assert!(e.to() == &3);
     }
 }

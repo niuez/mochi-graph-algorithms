@@ -4,13 +4,13 @@ use graph::kernel::Properties;
 use graph::property::NNegW;
 
 pub fn scaling_dijkstra<'a, G, F>(g: &'a G, s: &G::VType, cost: F) -> Properties<NNegW<usize>>
-where G: Graph<'a>, F: Fn(&G::EType) -> NNegW<usize> { 
+where G: Graph<'a>, F: Fn(&G::AEType) -> NNegW<usize> { 
     type W = NNegW<usize>;
     let n = g.v_size();
     let mut dist = Properties::new(n, &W::zero());
     let mut mw = W::zero();
-    for e in g.edges() {
-        if mw < cost(e.edge()) { mw = cost(e.edge()); }
+    for ref e in g.edges() {
+        if mw < cost(e) { mw = cost(e); }
     }
 
     let logw = {
@@ -36,8 +36,8 @@ where G: Graph<'a>, F: Fn(&G::EType) -> NNegW<usize> {
         for d in 0..heap.len() {
             while let Some(v) = heap[d].pop() {
                 if temp[&v] < NNegW::Some(d) { continue; }
-                for e in g.delta(&v) {
-                    let c = (cost(e.edge()) >> k) + dist[e.from()] - dist[e.to()];
+                for ref e in g.delta(&v) {
+                    let c = (cost(e) >> k) + dist[e.from()] - dist[e.to()];
                     if temp[e.from()] + c < temp[e.to()] && temp[e.from()] + c < NNegW::Some(heap.len()) {
                         temp[e.to()] = temp[e.from()] + c;
                         heap[d + match c { NNegW::Some(cc) => cc, _ => unreachable!() }].push(e.to().clone());
@@ -66,7 +66,7 @@ fn scaling_dijkstra_test() {
     g.add_edge((3, 1, 1));
     g.add_edge((3, 2, 5));
 
-    let dist = scaling_dijkstra(&g, &1, |e| NNegW::Some(e.2 as usize));
+    let dist = scaling_dijkstra(&g, &1, |e| NNegW::Some(e.edge().2));
     assert!(dist[&0] == NNegW::Some(3));
     assert!(dist[&1] == NNegW::Some(0));
     assert!(dist[&2] == NNegW::Some(2));

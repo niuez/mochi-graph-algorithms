@@ -44,11 +44,11 @@ where N: Residual<'a>, N::AEType: ResidualEdge, C: Capacity {
 }
 
 pub fn dinic<'a, N , C, F>(g: &'a N, s: &N::VType, t: &N::VType, cap: F) -> C
-where N: Residual<'a>, N::AEType: ResidualEdge, C: Capacity, F: Fn(&N::EType) -> C {
+where N: Residual<'a>, N::AEType: ResidualEdge, C: Capacity, F: Fn(&N::AEType) -> C {
     let mut ff = C::zero();
     let mut rcap = Properties::new(g.e_size(), &C::zero());
     for ref e in g.edges() {
-        rcap[e] = cap(e.edge());
+        rcap[e] = cap(e);
     }
     let mut level;
     while {
@@ -72,7 +72,7 @@ fn dinic_test() {
         g.add_edge((1, 2, 1));
         g.add_edge((1, 3, 1));
         g.add_edge((2, 3, 2));
-        let mflow = dinic(&g, &0, &3, |e| NNegW::Some(e.2));
+        let mflow = dinic(&g, &0, &3, |e| NNegW::Some(e.edge().2));
         assert!(mflow == NNegW::Some(3));
     }
 }

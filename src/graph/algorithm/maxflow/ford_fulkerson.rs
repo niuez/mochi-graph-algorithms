@@ -25,11 +25,11 @@ where N: Residual<'a>, N::AEType: ResidualEdge, C: Capacity {
 }
 
 pub fn ford_fulkerson<'a, N, C, F>(g: &'a N, s: &N::VType, t: &N::VType, cap: F) -> C 
-where N: Residual<'a>, N::AEType: ResidualEdge, C: Capacity, F: Fn(&N::EType) -> C {
+where N: Residual<'a>, N::AEType: ResidualEdge, C: Capacity, F: Fn(&N::AEType) -> C {
     let mut ff = C::zero();
     let mut rcap = Properties::new(g.e_size(), &C::zero());
     for ref e in g.edges() {
-        rcap[e] = cap(e.edge());
+        rcap[e] = cap(e);
     }
     loop {
         let mut used = Properties::new(g.v_size(), &false);
@@ -52,7 +52,7 @@ fn ford_fulkerson_test() {
         g.add_edge((1, 2, 1));
         g.add_edge((1, 3, 1));
         g.add_edge((2, 3, 2));
-        let mflow = ford_fulkerson(&g, &0, &3, |e| NNegW::Some(e.2));
+        let mflow = ford_fulkerson(&g, &0, &3, |e| NNegW::Some(e.edge().2));
         assert!(mflow == NNegW::Some(3));
     }
 }
@@ -77,7 +77,7 @@ fn ford_fulkerson_test2() {
         let (x,y,w) = (a[0],a[1],a[2]);
         g.add_edge((x, y, w));
     }
-    if let NNegW::Some(flow) = ford_fulkerson(&g, &0, &(n - 1), |e| NNegW::Some(e.2)) {
+    if let NNegW::Some(flow) = ford_fulkerson(&g, &0, &(n - 1), |e| NNegW::Some(e.edge().2)) {
         println!("{}", flow);
     }
 }

@@ -5,7 +5,7 @@ use graph::kernel::Properties;
 use std::collections::VecDeque;
 
 pub fn spfa<'a, G, W, F>(g: &'a G, s: &G::VType, cost: F) -> Option<Properties<W>>
-where G: Directed<'a>, W: ArbWeight, F: Fn(&G::EType) -> W {
+where G: Directed<'a>, W: ArbWeight, F: Fn(&G::AEType) -> W {
     let n = g.v_size();
     let mut dist = Properties::new(n, &W::inf());
     let mut que = VecDeque::new();
@@ -19,9 +19,9 @@ where G: Directed<'a>, W: ArbWeight, F: Fn(&G::EType) -> W {
 
     while let Some(v) = que.pop_back() {
         inc[&v] = false;
-        for e in g.delta(&v) {
-            if dist[e.from()] + cost(e.edge()) < dist[e.to()] {
-                dist[e.to()] = dist[e.from()] + cost(e.edge());
+        for ref e in g.delta(&v) {
+            if dist[e.from()] + cost(e) < dist[e.to()] {
+                dist[e.to()] = dist[e.from()] + cost(e);
                 if !inc[e.to()] {
                     que.push_back(e.to().clone());
                     inc[e.to()] = true;
@@ -47,7 +47,7 @@ fn spfa_test() {
         g.add_edge((1, 3, 1));
         g.add_edge((2, 3, 2));
 
-        let dist = spfa(&g, &0, |e| ArbW::Some(e.2)).unwrap();
+        let dist = spfa(&g, &0, |e| ArbW::Some(e.edge().2)).unwrap();
         assert!(dist[&0] == ArbW::Some(0));
         assert!(dist[&1] == ArbW::Some(2));
         assert!(dist[&2] == ArbW::Some(-3));
@@ -62,7 +62,7 @@ fn spfa_test() {
         g.add_edge((2, 3, 2));
         g.add_edge((3, 1, 0));
 
-        assert!(spfa(&g, &0, |e| ArbW::Some(e.2)).is_none());
+        assert!(spfa(&g, &0, |e| ArbW::Some(e.edge().2)).is_none());
     }
 }
 

@@ -5,7 +5,7 @@ use graph::algorithm::single_source_shortest_path::feasible_potential;
 use graph::algorithm::single_source_shortest_path::dijkstra;
 
 pub fn dijkstra_with_potential<'a, G, W, F>(g: &'a G, cost: F) -> Option<Properties<Properties<W>>>
-where G: Directed<'a>, W: ArbWeight, F: Fn(&G::EType) -> W, <W as ToNNegWeight>::Output: ToArbWeight<Output=W> {
+where G: Directed<'a>, W: ArbWeight, F: Fn(&G::AEType) -> W, <W as ToNNegWeight>::Output: ToArbWeight<Output=W> {
     let n = g.v_size();
 
     if let Some(pi) = feasible_potential(g, |e| cost(e)) {
@@ -35,7 +35,7 @@ fn dijkstra_with_potential_test() {
         g.add_edge((1, 3, 4));
         g.add_edge((2, 3, 1));
         g.add_edge((3, 2, 7));
-        let dist = dijkstra_with_potential(&g, |e| ArbW::Some(e.2 as isize)).unwrap();
+        let dist = dijkstra_with_potential(&g, |e| ArbW::Some(e.edge().2 as isize)).unwrap();
         let ans = vec![vec![0, 1, 3, 4], vec![-1, 0, 2, 3], vec![-1, -1, 0, 1], vec![-1, -1, 7, 0]];
         for u in g.vertices() {
             for v in g.vertices() {

@@ -10,3 +10,4 @@ pub use self::undirected_graph::UndirectedGraph;
 pub use self::bipartite_graph::BipartiteGraph;
 pub use self::residual_network::ResidualNetwork;
 pub use self::subedge_graph::SubEdgeGraph;
+pub use self::adjedge_graph::AdjEdgeGraph;

@@ -3,6 +3,7 @@ pub mod undirected_graph;
 pub mod bipartite_graph;
 pub mod residual_network;
 pub mod subedge_graph;
+pub mod adjedge_graph;
 
 pub use self::directed_graph::DirectedGraph;
 pub use self::undirected_graph::UndirectedGraph;

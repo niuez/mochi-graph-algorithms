@@ -17,12 +17,6 @@ where G: Graph<'a> + 'a, F: Fn(&G::EType) -> bool {
     }
 }
 
-pub struct SubEdgeGraph<'a, G, F>
-where G: Graph<'a> + 'a, F: Fn(&G::EType) -> bool + 'a {
-    g: &'a G,
-    cond: F,
-}
-
 pub struct EIter<'a, G, F>
 where G: Graph<'a> + 'a, F: Fn(&G::EType) -> bool + 'a {
     iter: G::EIter,
@@ -38,6 +32,12 @@ where G: Graph<'a> + 'a, F: Fn(&G::EType) -> bool + 'a {
         }
         None
     }
+}
+
+pub struct SubEdgeGraph<'a, G, F>
+where G: Graph<'a> + 'a, F: Fn(&G::EType) -> bool + 'a {
+    g: &'a G,
+    cond: F,
 }
 
 impl<'a, G, F> SubEdgeGraph<'a, G, F>

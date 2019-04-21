@@ -3,8 +3,8 @@ use graph::kernel::property::*;
 
 #[derive(Clone, Copy)]
 pub struct PathW<W, V> where W: ArbWeight, V: Vertex {
-    weight: W,
-    before: Option<V>,
+    pub weight: W,
+    pub before: Option<V>,
 }
 
 impl<W, V> ToNNegWeight for PathW<W, V> where W: ArbWeight, V: Vertex {

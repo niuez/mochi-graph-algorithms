@@ -23,10 +23,15 @@ mochi-graph-algorithms is the library of graphs abstruction by Rust.
 
 ## all\_pairs\_shortest\_path
 
-- Warshall-Floyd
+- warshall-floyd
   O(V^3)
 - dijkstra\_with\_potential
   O(V(V + E)logV)
+
+### minimum\_spanning\_tree
+
+- prim
+  O(E log V)
 
 ### maxflow
 
@@ -39,7 +44,7 @@ mochi-graph-algorithms is the library of graphs abstruction by Rust.
 - fujishige
   O(VElog(Cmax))
 
-### minimum cost flow
+### minimum\_cost\_flow
 
 - successive shortest paths(primal dual?)
   O(FElogV)

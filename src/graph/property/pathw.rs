@@ -1,64 +1,63 @@
-use graph::kernel::graph::*;
 use graph::kernel::property::*;
 
 #[derive(Clone, Copy)]
-pub struct PathW<W, V> where W: ArbWeight, V: Vertex {
+pub struct PathW<W, V> where W: ArbWeight, V: Copy {
     pub weight: W,
     pub before: Option<V>,
-    pub eid: Option<usize>,
 }
 
-impl<W, V> ToNNegWeight for PathW<W, V> where W: ArbWeight, V: Vertex {
+impl<W, V> ToNNegWeight for PathW<W, V> where W: ArbWeight, V: Copy {
     type Output = PathW<<W as ToNNegWeight>::Output, V>;
     fn to_nnegw(&self) -> Self::Output {
-        PathW { weight: self.weight.to_nnegw(), before: self.before, eid: self.eid }
+        PathW { weight: self.weight.to_nnegw(), before: self.before }
     }
 }
 
-impl<W, V> ToArbWeight for PathW<W, V> where W: ArbWeight, V: Vertex {
+impl<W, V> ToArbWeight for PathW<W, V> where W: ArbWeight, V: Copy {
     type Output = PathW<<W as ToArbWeight>::Output, V>;
     fn to_arbw(&self) -> Self::Output {
-        PathW { weight: self.weight.to_arbw(), before: self.before, eid: self.eid }
+        PathW { weight: self.weight.to_arbw(), before: self.before }
     }
 }
 
-impl<W, V> std::ops::Add for PathW<W, V> where W: ArbWeight, V: Vertex {
+impl<W, V> std::ops::Add for PathW<W, V> where W: ArbWeight, V: Copy {
     type Output = Self;
     fn add(self, rhs: Self) -> Self::Output {
-        PathW { weight: self.weight + rhs.weight, before: rhs.before, eid: rhs.eid }
+        PathW { weight: self.weight + rhs.weight, before: rhs.before }
     }
 }
 
-impl<W, V> std::cmp::PartialEq for PathW<W, V> where W: ArbWeight, V: Vertex {
+impl<W, V> std::cmp::PartialEq for PathW<W, V> where W: ArbWeight, V: Copy {
     fn eq(&self, rhs: &Self) -> bool {
         self.weight == rhs.weight
     }
 }
-impl<W, V> std::cmp::Eq for PathW<W, V> where W: ArbWeight, V: Vertex {}
+impl<W, V> std::cmp::Eq for PathW<W, V> where W: ArbWeight, V: Copy {}
 
 
-impl<W, V> std::cmp::PartialOrd for PathW<W, V> where W: ArbWeight, V: Vertex {
+impl<W, V> std::cmp::PartialOrd for PathW<W, V> where W: ArbWeight, V: Copy {
     fn partial_cmp(&self, rhs: &Self) -> Option<std::cmp::Ordering> {
         Some(self.cmp(rhs))
     }
 }
 
-impl<W, V> std::cmp::Ord for PathW<W, V> where W: ArbWeight, V: Vertex {
+impl<W, V> std::cmp::Ord for PathW<W, V> where W: ArbWeight, V: Copy {
     fn cmp(&self, rhs: &Self) -> std::cmp::Ordering {
         self.weight.cmp(&rhs.weight)
     }
 }
 
-impl<W, V> ArbWeight for PathW<W, V> where W: ArbWeight, V: Vertex {
-    fn inf() -> Self { PathW{ weight: W::inf(), before: None, eid: None } }
-    fn zero() -> Self { PathW{ weight: W::zero(), before: None, eid: None } }
-    fn neg_inf() -> Self { PathW{ weight: W::neg_inf(), before: None, eid: None } }
+impl<W, V> ArbWeight for PathW<W, V> where W: ArbWeight, V: Copy {
+    fn inf() -> Self { PathW{ weight: W::inf(), before: None } }
+    fn zero() -> Self { PathW{ weight: W::zero(), before: None } }
+    fn neg_inf() -> Self { PathW{ weight: W::neg_inf(), before: None } }
 }
 
-impl<W, V> NNegWeight for PathW<W, V> where W: NNegWeight, V: Vertex {}
+impl<W, V> NNegWeight for PathW<W, V> where W: NNegWeight, V: Copy {}
 
 #[test]
 fn pathw_test() {
+    use graph::kernel::graph::*;
     use graph::graph::DirectedGraph;
     use graph::property::NNegW;
     use graph::algorithm::single_source_shortest_path::dijkstra;
@@ -72,7 +71,7 @@ fn pathw_test() {
         g.add_edge((1, 5, 4));
         g.add_edge((4, 5, 2));
 
-        let path = dijkstra(&g, &0, |e| PathW{ weight: NNegW::Some(e.edge().2), before: Some(e.from().clone()), eid: Some(e.id()) });
+        let path = dijkstra(&g, &0, |e| PathW{ weight: NNegW::Some(e.edge().2), before: Some(e.from().clone()) });
 
         assert!(path[&0].weight == NNegW::Some(0) && path[&0].before == None);
         assert!(path[&1].weight == NNegW::Some(1) && path[&1].before == Some(0));

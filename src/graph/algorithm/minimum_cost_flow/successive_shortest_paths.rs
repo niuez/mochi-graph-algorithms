@@ -33,8 +33,7 @@ where N: Residual<'a>, N::AEType: ResidualEdge, Cap: Capacity + NNegWeight, Co: 
         let dist = dijkstra(g, s, |e| {
             if cap[e] > Cap::zero() { PathW { 
                 weight: (co[e] + potential[e.from()] - potential[e.to()]).to_nnegw(), 
-                before: Some(e.from().clone()),
-                eid: Some(e.id()),
+                before: Some((e.from().clone(), e.id())),
             } }
             else { PathW::inf() }
         });
@@ -43,12 +42,12 @@ where N: Residual<'a>, N::AEType: ResidualEdge, Cap: Capacity + NNegWeight, Co: 
 
         let mut ff = remain;
         let mut u = *t;
-        while let (Some(ref id), Some(before)) = (dist[&u].eid, dist[&u].before) {
+        while let Some((before, ref id)) = dist[&u].before {
             ff = min(ff, cap[id]);
             u = before;
         }
         let mut u = *t;
-        while let (Some(ref id), Some(before)) = (dist[&u].eid, dist[&u].before) {
+        while let Some((before, ref id)) = dist[&u].before {
             ans = ans + co[id] * ff;
             cap[id] = cap[id] - ff;
             cap[&rev[id]] = cap[&rev[id]] + ff;

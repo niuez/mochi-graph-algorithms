@@ -2,6 +2,8 @@
 
 [![CircleCI](https://circleci.com/gh/kutimoti/mochi-graph-algorithms.svg?style=svg)](https://circleci.com/gh/kutimoti/mochi-graph-algorithms)
 
+mochi-graph-algorithms is the library of graphs abstruction by Rust.
+
 ## algorithms
 
 ### single\_source\_shortest\_path
@@ -37,6 +39,11 @@
 - fujishige
   O(VElog(Cmax))
 
+### minimum cost flow
+
+- successive shortest paths(primal dual?)
+  O(FElogV)
+
 ### cardinality\_bipartite\_matching
 
 - hopcroft\_karp
@@ -50,9 +57,8 @@
 
 ## TODO
 
-- RHS-algorithm(maxflow)
-- Orlin scaling algorithm (maxflow) (difficult)
-- primal dual (mcstf)
+- RHS-algorithm(min cost flow)
+- Orlin scaling algorithm (min cost flow) (difficult)
 - min cost circulation
 - min cost transshipment
 - mst

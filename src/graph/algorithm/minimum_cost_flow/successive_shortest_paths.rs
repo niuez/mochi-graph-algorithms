@@ -8,7 +8,7 @@ use graph::algorithm::single_source_shortest_path::{ dijkstra, bellman_ford };
 use std::cmp::min;
 
 pub fn successive_shortest_paths<'a, N, Cap, Co, FCap, FCo>(g: &'a N, s: &N::VType, t: &N::VType, flow: Cap, capacity: FCap, cost: FCo) -> Option<Co>
-where N: Residual<'a>, N::AEType: ResidualEdge, Cap: Capacity, Co: Cost<Cap>, <Co as ToNNegWeight>::Output: ToArbWeight<Output=Co>, FCap: Fn(&N::AEType) -> Cap, FCo: Fn(&N::AEType) -> Co {
+where N: Residual<'a>, N::AEType: ResidualEdge, Cap: Capacity + NNegWeight, Co: Cost<Cap>, <Co as ToNNegWeight>::Output: ToArbWeight<Output=Co>, FCap: Fn(&N::AEType) -> Cap, FCo: Fn(&N::AEType) -> Co {
     let mut ans = Co::zero();
     let mut cap = Properties::new(g.e_size(), &Cap::zero());
     let mut co = Properties::new(g.e_size(), &Co::zero());

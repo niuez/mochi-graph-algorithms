@@ -49,9 +49,9 @@ pub trait SubtractableWeight: ArbWeight + std::ops::Sub<Output=Self> {}
 impl<W> SubtractableWeight for W where W: ArbWeight + std::ops::Sub<Output=Self> {}
 
 /// Trait of capacity for maxflow, mcf, and so on.
-pub trait Capacity: NNegWeight + IntegerWeight + SubtractableWeight  {}
+pub trait Capacity: ArbWeight + IntegerWeight + SubtractableWeight  {}
 
-impl<W> Capacity for W where W: NNegWeight + IntegerWeight + SubtractableWeight {}
+impl<W> Capacity for W where W: ArbWeight + IntegerWeight + SubtractableWeight {}
 
 pub trait Cost<Cap>: ArbWeight + SubtractableWeight + std::ops::Mul<Cap, Output=Self> {}
 

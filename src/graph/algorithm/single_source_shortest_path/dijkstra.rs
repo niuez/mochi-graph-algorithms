@@ -39,9 +39,9 @@ where G: Graph<'a>, W: NNegWeight, F: Fn(&G::AEType) -> W {
     let mut heap = BinaryHeap::new();
     heap.push(DijkstraNode { dist: dist[s], ver: s.clone() });
 
-    while let Some(DijkstraNode { dist: d, ver: v}) = heap.pop() {
-        if dist[&v] < d { continue }
-        for ref e in g.delta(&v) {
+    while let Some(DijkstraNode { dist: d, ver: ref v}) = heap.pop() {
+        if dist[v] < d { continue }
+        for ref e in g.delta(v) {
             if dist[e.from()] + cost(e) < dist[e.to()] {
                 dist[e.to()] = dist[e.from()] + cost(e);
                 heap.push(DijkstraNode{ dist: dist[e.to()], ver: e.to().clone() })

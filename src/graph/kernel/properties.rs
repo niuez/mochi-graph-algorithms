@@ -23,7 +23,18 @@ impl<'a, W: Clone> Properties<W> {
     }
 }
 
+impl<W: Clone> Clone for Properties<W> {
+    fn clone(&self) -> Self {
+        Properties { vec: self.vec.clone() }
+    }
+}
+
 impl<'a, W> Properties<W> {
+    pub fn new_empty() -> Self {
+        Properties {
+            vec: Vec::new(), 
+        }
+    }
     pub fn push(&mut self, elem: W) {
         self.vec.push(elem);
     }

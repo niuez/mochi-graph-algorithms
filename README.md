@@ -34,6 +34,8 @@ mochi-graph-algorithms is the library of graphs abstruction by Rust.
   O(E log V)
 - kruskal
   O(E log V + E α(V))
+- boruvka
+  O(E log V)
 
 ### maxflow
 

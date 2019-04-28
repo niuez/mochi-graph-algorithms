@@ -5,6 +5,7 @@ pub mod dial;
 pub mod scaling_dijkstra;
 pub mod feasible_potential;
 pub mod bfs;
+pub mod dijkstra_with_radix32;
 
 pub use self::dijkstra::dijkstra;
 pub use self::bellman_ford::bellman_ford;

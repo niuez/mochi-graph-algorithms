@@ -12,6 +12,8 @@ mochi-graph-algorithms is the library of graphs abstruction by Rust.
   O(V + E)
 - dijkstra(with binary heap) 
   O((V + E)logV)
+- dijkstra(with radix heap 32)
+  O(E log log V)
 - bellman\_ford 
   O(VE)
 - spfa
@@ -23,10 +25,12 @@ mochi-graph-algorithms is the library of graphs abstruction by Rust.
 
 ## all\_pairs\_shortest\_path
 
-- warshall-floyd
+- feasible\_potential
+  O(VE)
+- warshall\_floyd
   O(V^3)
 - dijkstra\_with\_potential
-  O(V(V + E)logV)
+  O(VE + V(V + E)logV)
 
 ### minimum\_spanning\_tree
 
@@ -51,7 +55,7 @@ mochi-graph-algorithms is the library of graphs abstruction by Rust.
 ### minimum\_cost\_flow
 
 - successive shortest paths(primal dual?)
-  O(FElogV)
+  O(VE + FElogV)
 
 ### cardinality\_bipartite\_matching
 

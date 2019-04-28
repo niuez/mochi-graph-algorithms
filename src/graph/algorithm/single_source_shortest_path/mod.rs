@@ -14,4 +14,5 @@ pub use self::dial::dial;
 pub use self::scaling_dijkstra::scaling_dijkstra;
 pub use self::feasible_potential::feasible_potential;
 pub use self::bfs::bfs;
+pub use self::dijkstra_with_radix32::dijkstra_with_radix32;
 

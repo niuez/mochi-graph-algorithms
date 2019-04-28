@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/kutimoti/mochi-graph-algorithms.svg?style=svg)](https://circleci.com/gh/kutimoti/mochi-graph-algorithms)
 
-mochi-graph-algorithms is the library of graphs abstruction by Rust.
+mochi-graph-algorithms is the library of graphs abstraction by Rust.
 
 ## algorithms
 

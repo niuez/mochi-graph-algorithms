@@ -1,27 +1,11 @@
 pub fn bsr32(x: u32) -> usize {
     if x == 0 { 0 }
-    else {
-        let mut t = 16usize;
-        for i in (0..=3).rev() {
-            if x & !((1u32 << t) - 1) != 0 { t += 1usize << i; }
-            else { t -= 1usize << i; }
-        }
-        if x & !((1u32 << t) - 1) != 0 { t += 1; }
-        t
-    }
+    else { 31 - x.leading_zeros() as usize }
 }
 
 pub fn bsr64(x: u64) -> usize {
     if x == 0 { 0 }
-    else {
-        let mut t = 16usize;
-        for i in (0..=4).rev() {
-            if x & !((1u64 << t) - 1) != 0 { t += 1usize << i; }
-            else { t -= 1usize << i; }
-        }
-        if x & !((1u64 << t) - 1) != 0 { t += 1; }
-        t
-    }
+    else { 63 - x.leading_zeros() as usize }
 }
 
 pub struct RadixHeap32<T> {

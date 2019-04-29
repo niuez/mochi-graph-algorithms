@@ -59,7 +59,7 @@ impl ToNNeg for isize {
     fn to_nneg(&self) -> Self::Output {
         match self.clone() {
             num if num >= 0 => num as Self::Output,
-            _ => unreachable!()
+            _ => unreachable!("negative value of isize can't convert to usize")
         }
     }
 }
@@ -69,7 +69,7 @@ impl ToNNeg for i64 {
     fn to_nneg(&self) -> Self::Output {
         match self.clone() {
             num if num >= 0 => num as Self::Output,
-            _ => unreachable!()
+            _ => unreachable!("negative value of i64 can't convert to u64")
         }
     }
 }
@@ -79,7 +79,7 @@ impl ToNNeg for i32 {
     fn to_nneg(&self) -> Self::Output {
         match self.clone() {
             num if num >= 0 => num as Self::Output,
-            _ => unreachable!()
+            _ => unreachable!("negative value of i32 can't convert to u32")
         }
     }
 }
@@ -88,7 +88,7 @@ impl ToNNeg for i16 {
     fn to_nneg(&self) -> Self::Output {
         match self.clone() {
             num if num >= 0 => num as Self::Output,
-            _ => unreachable!()
+            _ => unreachable!("negative value of i16 can't convert to u16")
         }
     }
 }
@@ -98,7 +98,7 @@ impl ToNNeg for i8 {
     fn to_nneg(&self) -> Self::Output {
         match self.clone() {
             num if num >= 0 => num as Self::Output,
-            _ => unreachable!()
+            _ => unreachable!("negative value of i8 can't convert to u8")
         }
     }
 }

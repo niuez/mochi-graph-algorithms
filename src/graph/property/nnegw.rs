@@ -32,13 +32,13 @@ impl<W> std::ops::Sub for NNegW<W> where W: Zero + IsNum + IsNN + std::ops::Add<
         match self {
             NNegW::Inf => {
                 match rhs {
-                    NNegW::Inf => unreachable!(),
+                    NNegW::Inf => unreachable!("can't resolve inf - inf"),
                     _ => NNegW::Inf,
                 }
             }
             NNegW::Some(d) => {
                 match rhs {
-                    NNegW::Inf => unreachable!(), 
+                    NNegW::Inf => unreachable!("can't resolve [some value] - inf on non-negative weight"), 
                     NNegW::Some(d2) => NNegW::Some(d - d2),
                 }
             }

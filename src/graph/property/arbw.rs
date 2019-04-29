@@ -15,7 +15,7 @@ impl<W> std::ops::Add for ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W
         match self {
             ArbW::Inf => {
                 match rhs {
-                    ArbW::NegInf => unreachable!(),
+                    ArbW::NegInf => unreachable!("can't resolve inf + neginf"),
                     _ => ArbW::Inf,
                 }
             }
@@ -28,7 +28,7 @@ impl<W> std::ops::Add for ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W
             }
             ArbW::NegInf => {
                 match rhs {
-                    ArbW::Inf => unreachable!(),
+                    ArbW::Inf => unreachable!("can't resolve neginf + inf"),
                     _ => ArbW::NegInf,
                 }
             }
@@ -43,7 +43,7 @@ impl<W> std::ops::Sub for ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W
         match self {
             ArbW::Inf => {
                 match rhs {
-                    ArbW::Inf => unreachable!(),
+                    ArbW::Inf => unreachable!("can't resolve inf - inf"),
                     _ => ArbW::Inf,
                 }
             }
@@ -56,7 +56,7 @@ impl<W> std::ops::Sub for ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W
             }
             ArbW::NegInf => {
                 match rhs {
-                    ArbW::NegInf => unreachable!(),
+                    ArbW::NegInf => unreachable!("can't resolve neginf - neginf"),
                     _ => ArbW::NegInf,
                 }
             }
@@ -154,7 +154,7 @@ impl<W> ToNNegWeight for ArbW<W> where W: Zero + IsNum + std::ops::Add<Output=W>
         match self {
             ArbW::Inf => NNegW::Inf,
             ArbW::Some(ref num) => NNegW::Some(num.to_nneg()),
-            ArbW::NegInf => unreachable!(), 
+            ArbW::NegInf => unreachable!("neginf can't convert to non-negative weight"), 
         }
     }
 }

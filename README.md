@@ -14,6 +14,8 @@ mochi-graph-algorithms is the library of graphs abstraction by Rust.
   O((V + E)logV)
 - dijkstra(with radix heap 32)
   O(E log log V)
+- dijkstra(with radix heap 64)
+  O(E log log V)
 - bellman\_ford 
   O(VE)
 - spfa

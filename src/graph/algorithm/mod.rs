@@ -5,3 +5,4 @@ pub mod maxflow;
 pub mod cardinality_general_matching;
 pub mod minimum_cost_flow;
 pub mod minimum_spanning_tree;
+pub mod kth_shortest_paths;

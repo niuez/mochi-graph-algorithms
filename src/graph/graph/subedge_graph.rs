@@ -96,9 +96,9 @@ pub mod subedge_test_mod {
     use graph::graph::subedge_graph::*;
     use graph::kernel::Properties;
     use graph::property::NNegW;
-    fn test_test<'a, G>(g: &'a G, s: &G::VType) -> Properties<NNegW<usize>>
-    where G: Graph<'a> {
-        let sg = SubEdgeGraph::new(g, |_| false);
+    fn test_test<'a, G, F>(g: &'a G, s: &G::VType, cond: F) -> Properties<NNegW<usize>>
+    where G: Graph<'a>, F: Fn(&G::AEType) -> bool {
+        let sg = SubEdgeGraph::new(g, cond);
         bfs(&sg, s)
     }
     #[test]
@@ -117,7 +117,7 @@ pub mod subedge_test_mod {
         g.add_edge((0, 4, false));
         g.add_edge((2, 4, false));
         {
-            let dist = test_test(&g, &0);
+            let dist = test_test(&g, &0, |e| e.edge().2);
             assert!(dist[&0] == NNegW::Some(0));
             assert!(dist[&1] == NNegW::Some(1));
             assert!(dist[&2] == NNegW::Some(1));

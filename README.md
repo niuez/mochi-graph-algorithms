@@ -34,6 +34,11 @@ mochi-graph-algorithms is the library of graphs abstraction by Rust.
 - dijkstra\_with\_potential
   O(VE + V(V + E)logV)
 
+### k-th\_shortest\_paths
+
+- yen
+  O(k ( E log V ))
+
 ### minimum\_spanning\_tree
 
 - prim

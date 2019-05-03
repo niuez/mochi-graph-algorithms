@@ -54,12 +54,8 @@ where G: Graph<'a>, W: NNegWeight + SubtractableWeight, F: Fn(&G::AEType) -> W {
         (mut_sp, mut_pi)
     };
 
-    let n = g.v_size();
-    let mut dist = Properties::new(n, &W::inf());
-    dist[s] = W::zero();
-
     let mut heap = BinaryHeap::new();
-    heap.push(EppisteinNode { dist: dist[s], ver: s.clone(), sp: false });
+    heap.push(EppisteinNode { dist: W::zero(), ver: s.clone(), sp: false });
 
     while let Some(EppisteinNode { dist: d, ver: ref v, sp: is_sp }) = heap.pop() {
         if !is_sp {
@@ -67,10 +63,7 @@ where G: Graph<'a>, W: NNegWeight + SubtractableWeight, F: Fn(&G::AEType) -> W {
             if ans.len() == k + 1 { break; }
         }
         for ref e in g.delta(v) {
-            if dist[e.from()] + cost(e) + pi[e.to()] - pi[e.from()] < dist[e.to()] {
-                dist[e.to()] = dist[e.from()] + cost(e) + pi[e.to()] - pi[e.from()];
-                heap.push(EppisteinNode{ dist: dist[e.to()], ver: e.to().clone(), sp: sp_edge[e] })
-            }
+            heap.push(EppisteinNode{ dist: d + cost(e) + pi[e.to()] - pi[e.from()], ver: e.to().clone(), sp: sp_edge[e] })
         }
     }
 

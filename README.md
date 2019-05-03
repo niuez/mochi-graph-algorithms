@@ -38,6 +38,8 @@ mochi-graph-algorithms is the library of graphs abstraction by Rust.
 
 - yen
   O(k ( E log V ))
+- eppistein
+  O(E log V + k)
 
 ### minimum\_spanning\_tree
 

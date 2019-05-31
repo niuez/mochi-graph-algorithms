@@ -4,6 +4,12 @@
 
 mochi-graph-algorithms is the library of graphs abstraction by Rust.
 
+## document
+
+ちょっとずつ書いていきます.
+
+- グラフ抽象化の抽象化パート -> [./kernel.md](kernel.md)
+
 ## algorithms
 
 ### single\_source\_shortest\_path

@@ -82,8 +82,10 @@ where G: Graph<'g> + 'g {
     pub fn new(g: &'g G) -> Self {
         let mut es = Vec::new();
         let mut adj = vec![Vec::new(); g.v_size()];
+        let mut i = 0;
         for e in g.edges() {
-            adj[e.to().id()].push(e.id());
+            adj[e.to().id()].push(i);
+            i += 1;
             es.push(e);
         }
         AntiGraph {

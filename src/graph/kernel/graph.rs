@@ -51,7 +51,7 @@ impl<V, P> Edge for (V, V, P) where V: Vertex, P: Property {
 /// Why do we use [`Edge`] as is? There are 2 reasons.
 /// - To give values to the edges to use Properties (AdjEdge has ID).
 /// - When using a undirected graph as a directed graph, must swap two ends of edge.
-pub trait AdjEdge: ID + Edge {
+pub trait AdjEdge: ID + Edge + Clone {
 
     /// Edge type of raw edge.
     type EType: Edge<VType=Self::VType>;

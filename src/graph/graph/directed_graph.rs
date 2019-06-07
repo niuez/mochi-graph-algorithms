@@ -5,6 +5,10 @@ pub struct Eite(pub usize);
 
 pub struct DiAdjEdge<'a, E: Edge + 'a>(&'a E, usize);
 
+impl<'a, E: Edge + 'a> Clone for DiAdjEdge<'a, E> {
+    fn clone(&self) -> Self { Self(self.0, self.1) }
+}
+
 impl<'a, E: Edge + 'a> ID for DiAdjEdge<'a, E> {
     fn id(&self) -> usize { self.1 }
 }

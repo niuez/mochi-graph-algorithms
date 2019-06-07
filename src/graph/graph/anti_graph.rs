@@ -1,5 +1,6 @@
 use graph::kernel::graph::*;
 
+#[derive(Clone)]
 pub struct AntiAdjEdge<'g, AE: AdjEdge + 'g>(&'g AE, usize);
 
 impl<'a, AE> ID for AntiAdjEdge<'a, AE>

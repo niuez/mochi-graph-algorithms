@@ -15,6 +15,15 @@ impl<'a, I: ID, W> IndexMut<&'a I> for Properties<W> {
     fn index_mut(&mut self, idx: &'a I) -> &mut Self::Output { &mut self.vec[idx.id()] }
 }
 
+impl<W> std::iter::FromIterator<W> for Properties<W> {
+    fn from_iter<T>(iter: T) -> Self
+    where T: IntoIterator<Item=W> {
+        let mut vec = Vec::new();
+        for item in iter { vec.push(item); }
+        Properties { vec: vec }
+    }
+}
+
 impl<'a, W: Clone> Properties<W> {
     pub fn new(n: usize, init: &W) -> Self {
         Properties {

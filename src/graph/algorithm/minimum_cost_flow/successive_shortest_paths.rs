@@ -2,10 +2,45 @@ use graph::kernel::graph::*;
 use graph::kernel::property::*;
 use graph::kernel::Properties;
 
-use graph::property::PathW;
+use graph::property::{ PathW };
 use graph::algorithm::single_source_shortest_path::{ dijkstra, bellman_ford };
+use graph::graph::AntiArborescence;
 
 use std::cmp::min;
+
+#[derive(Clone, Copy)]
+struct AntiEdge<AE: AdjEdge>(AE);
+
+impl<AE: AdjEdge> ID for AntiEdge<AE> {
+    fn id(&self) -> usize { self.0.id() }
+}
+
+impl<AE: AdjEdge> Edge for AntiEdge<AE> {
+    type VType = AE::VType;
+    fn from(&self) -> &Self::VType { self.0.to() }
+    fn to(&self) -> &Self::VType { self.0.from() }
+}
+
+impl<AE: AdjEdge> AdjEdge for AntiEdge<AE> {
+    type EType = AE;
+    fn edge(&self) -> &Self::EType { &self.0 }
+}
+
+fn shortest_path_tree<'a, G, W, F>(g: &'a G, s: &G::VType, cost: F) -> (Properties<W>, AntiArborescence<G::VType, AntiEdge<G::AEType>>)
+where G: Graph<'a>, W: NNegWeight, F: Fn(&G::AEType) -> W { 
+    let mut path = AntiArborescence::new_root(g.v_size(), s.clone());
+    let pathw_dist = dijkstra(g, s, |e| PathW {
+        weight: cost(e),
+        before: Some(e.clone()),
+    });
+    let dist = pathw_dist.iter().map(|w| w.weight).collect();
+    pathw_dist.iter().for_each(|w| {
+        if let Some(e) = w.before {
+            path.add_vertex(e.to().clone(), AntiEdge(e.clone()))
+        }
+    });
+    (dist, path)
+}
 
 pub fn successive_shortest_paths<'a, N, Cap, Co, FCap, FCo>(g: &'a N, s: &N::VType, t: &N::VType, flow: Cap, capacity: FCap, cost: FCo) -> Option<Co>
 where N: Residual<'a>, N::AEType: ResidualEdge, Cap: Capacity + NNegWeight, Co: Cost<Cap>, <Co as ToNNegWeight>::Output: ToArbWeight<Output=Co>, FCap: Fn(&N::AEType) -> Cap, FCo: Fn(&N::AEType) -> Co {
@@ -30,34 +65,32 @@ where N: Residual<'a>, N::AEType: ResidualEdge, Cap: Capacity + NNegWeight, Co: 
     let mut remain = flow;
 
     while remain > Cap::zero() {
-        let dist = dijkstra(g, s, |e| {
-            if cap[e] > Cap::zero() { PathW { 
-                weight: (co[e] + potential[e.from()] - potential[e.to()]).to_nnegw(), 
-                before: Some((e.from().clone(), e.id())),
-            } }
-            else { PathW::inf() }
+
+        let (dist, tree) = shortest_path_tree(g, s, |e| {
+
+            if cap[e] > Cap::zero() { (co[e] + potential[e.from()] - potential[e.to()]).to_nnegw() }
+            else { Co::inf().to_nnegw() }
         });
+        match tree.root_path(t) {
+            None => return None,
 
-        if dist[t] == PathW::inf() { return None }
+            Some(path) => {
 
-        let mut ff = remain;
-        let mut u = *t;
-        while let Some((before, ref id)) = dist[&u].before {
-            ff = min(ff, cap[id]);
-            u = before;
+                let mut neck = path.clone().fold(remain, |ff, e| min(ff, cap[e.edge()]));
+                path.for_each(|ae| {
+
+                    let e = ae.edge();
+                    ans = ans + co[e.edge()] * neck;
+                    cap[e.edge()] = cap[e.edge()] - neck;
+                    cap[&e.edge().rev()] = cap[&e.edge().rev()] + neck;
+
+                });
+                remain = remain - neck;
+            }
         }
-        let mut u = *t;
-        while let Some((before, ref id)) = dist[&u].before {
-            ans = ans + co[id] * ff;
-            cap[id] = cap[id] - ff;
-            cap[&rev[id]] = cap[&rev[id]] + ff;
-            u = before;
-        }
-
-        remain = remain - ff;
 
         for v in g.vertices() {
-            potential[v] = potential[v] + dist[v].weight.to_arbw();
+            potential[v] = potential[v] + dist[v].to_arbw();
         }
     }
 

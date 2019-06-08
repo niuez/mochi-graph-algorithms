@@ -9,6 +9,8 @@ impl<'a, E: Edge + 'a> Clone for UnAdjEdge<'a, E> {
     fn clone(&self) -> Self { Self(self.0, self.1, self.2) }
 }
 
+impl<'a, E: Edge + 'a> Copy for UnAdjEdge<'a, E> {}
+
 impl<'a, E: Edge + 'a> ID for UnAdjEdge<'a, E> {
     fn id(&self) -> usize { self.1 } 
 }

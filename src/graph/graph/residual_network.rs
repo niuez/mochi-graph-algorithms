@@ -9,6 +9,8 @@ impl<'a, E: Edge + 'a> Clone for RAdjEdge<'a, E> {
     fn clone(&self) -> Self { Self(self.0, self.1, self.2) }
 }
 
+impl<'a, E: Edge + 'a> Copy for RAdjEdge<'a, E> {}
+
 impl<'a, E: Edge + 'a> ID for RAdjEdge<'a, E> {
     fn id(&self) -> usize { self.1 * 2 + match self.2 { true => 0, false => 1 } } 
 }

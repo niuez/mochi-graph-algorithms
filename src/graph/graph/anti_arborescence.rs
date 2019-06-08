@@ -9,6 +9,8 @@ impl<'a, E: Edge + 'a> Clone for ArboAdjEdge<'a, E> {
     fn clone(&self) -> Self { Self(self.0, self.1) }
 }
 
+impl<'a, E: Edge + 'a> Copy for ArboAdjEdge<'a, E> {}
+
 impl<'a, E: Edge + 'a> ID for ArboAdjEdge<'a, E> {
     fn id(&self) -> usize { self.1 }
 }
@@ -105,6 +107,16 @@ where E: Edge + 'a {
     now: usize,
 }
 
+impl<'a, E: Edge + 'a> Clone for PathIter<'a, E> {
+    fn clone(&self) -> Self {
+        PathIter {
+            per: self.per,
+            es: self.es,
+            now: self.now,
+        }
+    }
+}
+
 impl<'a, E: Edge + 'a> std::iter::Iterator for PathIter<'a, E> {
     type Item = ArboAdjEdge<'a, E>;
     fn next(&mut self) -> Option<Self::Item> {
@@ -129,8 +141,7 @@ impl<V: Vertex, E: Edge> AntiArborescence<V, E> {
     }
     pub fn add_vertex(&mut self, v: V, e: E) {
         assert!(self.vs[v.id()].is_none());
-        assert!(e.from().id() == v.id());
-        assert!(self.vs[e.to().id()].is_some());
+        assert!(v.id() == e.from().id());
         let i = self.es.len();
         self.per[v.id()] = Some(Eite(i));
         self.vs[v.id()] = Some(v);
@@ -139,8 +150,8 @@ impl<V: Vertex, E: Edge> AntiArborescence<V, E> {
     pub fn root(&self) -> &V {
         self.vs[self.root_id].as_ref().unwrap()
     }
-    pub fn root_path<'a>(&'a self, v: &'a V) -> PathIter<'a, E> {
-        PathIter { per: &self.per, es: &self.es, now: v.id() }
+    pub fn root_path<'a>(&'a self, v: &'a V) -> Option<PathIter<'a, E>> {
+        self.vs[v.id()].map(|_| PathIter { per: &self.per, es: &self.es, now: v.id() })
     }
 }
 
@@ -151,7 +162,7 @@ fn anti_arborescence_test() {
     tree.add_vertex(2, (2, 1));
     tree.add_vertex(3, (3, 1));
     tree.add_vertex(4, (4, 3));
-    let mut path = tree.root_path(&4);
+    let mut path = tree.root_path(&4).unwrap();
     assert!(path.next().unwrap().to() == &3);
     assert!(path.next().unwrap().to() == &1);
     assert!(path.next().unwrap().to() == &0);

@@ -70,6 +70,7 @@ pub struct AntiArborescence<V: Vertex, E: Edge> {
     per: Vec<Option<Eite>>,
     vs: Vec<Option<V>>,
     es: Vec<E>,
+    root_id: usize,
 }
 
 impl<'a, V, E> Graph<'a> for AntiArborescence<V, E>
@@ -117,11 +118,13 @@ impl<'a, E: Edge + 'a> std::iter::Iterator for PathIter<'a, E> {
 impl<V: Vertex, E: Edge> AntiArborescence<V, E> {
     pub fn new_root(n: usize, root: V) -> Self {
         let mut vs = vec![None; n];
+        let id = root.id();
         vs[root.id()] = Some(root);
         AntiArborescence {
             per: vec![None; n],
             vs: vs,
             es: Vec::new(),
+            root_id: id,
         }
     }
     pub fn add_vertex(&mut self, v: V, e: E) {
@@ -132,6 +135,9 @@ impl<V: Vertex, E: Edge> AntiArborescence<V, E> {
         self.per[v.id()] = Some(Eite(i));
         self.vs[v.id()] = Some(v);
         self.es.push(e);
+    }
+    pub fn root(&self) -> &V {
+        self.vs[self.root_id].as_ref().unwrap()
     }
     pub fn root_path<'a>(&'a self, v: &'a V) -> PathIter<'a, E> {
         PathIter { per: &self.per, es: &self.es, now: v.id() }
